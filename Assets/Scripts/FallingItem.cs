@@ -2,47 +2,51 @@ using UnityEngine;
 
 public class FallingItem : MonoBehaviour
 {
-    [Header("---- Height Settings (Atur Disini) ----")]
-    [Tooltip("Ketinggian awal benda saat muncul (Y Posisi Atas)")]
-    public float startHeight = 6.0f; // Misal di atas layar
+    [Header("---- Height & Arc Settings ----")]
+    public float startHeight = -5.0f; // Mulai dari bawah
+    public float targetHeight = -2.0f; // Target di keranjang
+    public float arcHeight = 5.0f;     // Melambung tinggi
 
-    [Tooltip("Ketinggian target saat benda bisa ditangkap (Y Posisi Keranjang)")]
-    public float targetHeight = -2.0f; // Sesuaikan dengan posisi keranjang monyet
+    [Header("---- Visual Depth (Layer) ----")]
+    [Tooltip("Urutan Layer saat baru muncul (Harus tinggi biar di depan)")]
+    public int startOrder = 100;
+
+    [Tooltip("Urutan Layer saat mendarat (Samakan dengan layer Monyet)")]
+    public int targetOrder = 1;
 
     [Header("---- Fall Settings ----")]
-    public float fallDuration = 3.0f; // Durasi jatuh dalam detik
-    public float startScale = 2.0f;   // Ukuran Besar (Awal)
-    public float endScale = 0.5f;     // Ukuran Kecil (Akhir)
+    public float fallDuration = 3.0f;
+    public float startScale = 3.0f;   // Besar banget di awal
+    public float endScale = 0.5f;
 
     [Header("---- Game Data ----")]
     public int funValueAmount = 10;
 
-    // Private Variables (Gak perlu diubah di Inspector)
     private float timer = 0;
     private Vector3 startPos;
     private Vector3 targetPos;
     private Collider2D col;
+    private SpriteRenderer sr; // <-- Referensi ke Gambar
     private bool isCatchable = false;
 
     void Start()
     {
         col = GetComponent<Collider2D>();
+        sr = GetComponent<SpriteRenderer>(); // Ambil komponen gambar
 
-        // 1. Pastikan Collider mati di awal
         if (col != null) col.enabled = false;
 
-        // 2. Setup Posisi Awal (Otomatis atur ketinggian Y sesuai settingan)
-        // X diambil dari posisi saat ini (bisa dari spawner atau drag manual)
-        // Y dipaksa ke startHeight
+        // Setup Posisi & Scale
         transform.position = new Vector3(transform.position.x, startHeight, 0);
-
         startPos = transform.position;
-
-        // 3. Setup Posisi Target (X sama, Y sesuai targetHeight)
         targetPos = new Vector3(startPos.x, targetHeight, 0);
-
-        // 4. Set ukuran awal
         transform.localScale = Vector3.one * startScale;
+
+        // Setup Layer Awal
+        if (sr != null)
+        {
+            sr.sortingOrder = startOrder;
+        }
     }
 
     void Update()
@@ -52,23 +56,32 @@ public class FallingItem : MonoBehaviour
 
         if (progress <= 1.0f)
         {
-            // Gerak Interpolasi
-            transform.position = Vector3.Lerp(startPos, targetPos, progress);
+            // --- 1. GERAKAN PARABOLA ---
+            Vector3 linearPos = Vector3.Lerp(startPos, targetPos, progress);
+            float heightOffset = 4 * arcHeight * progress * (1 - progress);
+            transform.position = linearPos + new Vector3(0, heightOffset, 0);
 
-            // Skala Interpolasi
+            // --- 2. SCALING ---
             float currentScale = Mathf.Lerp(startScale, endScale, progress);
             transform.localScale = Vector3.one * currentScale;
 
-            // Logika Aktivasi Collider (di 80% perjalanan)
+            // --- 3. DYNAMIC SORTING ORDER (Baru!) ---
+            if (sr != null)
+            {
+                // Mengubah float hasil Lerp menjadi int (bilangan bulat)
+                float currentOrder = Mathf.Lerp(startOrder, targetOrder, progress);
+                sr.sortingOrder = (int)currentOrder;
+            }
+
+            // --- 4. COLLIDER ---
             if (progress > 0.8f && !isCatchable)
             {
                 isCatchable = true;
-                if (col != null) col.enabled = true; // BISA DITANGKAP
+                if (col != null) col.enabled = true;
             }
         }
         else
         {
-            // Lewat / Jatuh
             Destroy(gameObject);
         }
     }
