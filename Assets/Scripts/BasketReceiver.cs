@@ -2,8 +2,17 @@ using UnityEngine;
 
 public class BasketReceiver : MonoBehaviour
 {
+    // Cari script StackManager di induk (Player)
+    private StackManager stackManager;
+
     [Header("Visual Effects")]
     public ParticleSystem catchEffect;
+
+    void Start()
+    {
+        // Mencari script StackManager di object Parent (Monyet)
+        stackManager = GetComponentInParent<StackManager>();
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -13,18 +22,29 @@ public class BasketReceiver : MonoBehaviour
 
             if (itemData != null)
             {
-                // 1. TAMBAH/KURANG SKOR KE BAR
-                // Mengambil nilai funValueAmount dari item (bisa +10 atau -10)
-                GameManager.instance.AddFun(itemData.funValueAmount);
-
-                // 2. Mainkan Efek Visual (Hanya kalau item positif/bagus)
-                if (catchEffect != null && itemData.funValueAmount > 0)
+                // BUAH BAGUS (+Fun)
+                if (itemData.funValueAmount > 0)
                 {
-                    catchEffect.Play();
-                }
+                    if (stackManager != null) stackManager.AddToStack(other.gameObject);
 
-                // 3. Hapus Item
-                Destroy(other.gameObject);
+                    // Mainkan efek partikel happy
+                    if (catchEffect != null) catchEffect.Play();
+                }
+                // BOM / SAMPAH (-Fun)
+                else
+                {
+                    // Hancurkan Bom-nya
+                    Destroy(other.gameObject);
+
+                    // Hukum Player: Hilangkan 3 buah teratas!
+                    if (stackManager != null)
+                    {
+                        stackManager.RemoveTopItems(3);
+
+                        // TODO: Tambah efek ledakan disini nanti
+                        Debug.Log("DUAR! Tumpukan hancur 3 biji!");
+                    }
+                }
             }
         }
     }

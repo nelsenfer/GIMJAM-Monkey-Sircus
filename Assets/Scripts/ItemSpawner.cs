@@ -2,29 +2,28 @@ using UnityEngine;
 
 public class ItemSpawner : MonoBehaviour
 {
-    [Header("Apa yang mau dilempar?")]
-    [Tooltip("Masukkan Prefab Pisang dan Bom kesini")]
-    public GameObject[] itemPrefabs; // Array biar bisa isi banyak jenis barang
+    public GameObject[] itemPrefabs;
+    public float minSpawnTime = 1.0f;
+    public float maxSpawnTime = 3.0f;
+    public float xRange = 7.0f;
 
-    [Header("Pengaturan Waktu")]
-    public float minSpawnTime = 1.0f; // Paling cepat muncul tiap 1 detik
-    public float maxSpawnTime = 3.0f; // Paling lambat muncul tiap 3 detik
-
-    [Header("Area Lemparan (Posisi X)")]
-    public float xRange = 7.0f; // Seberapa lebar area lemparannya (kiri-kanan)
+    // Referensi ke Player untuk tanya tinggi tumpukan
+    public StackManager playerStackManager;
 
     private float timer;
 
     void Start()
     {
-        // Set waktu lemparan pertama
+        // Cari otomatis kalau lupa drag
+        if (playerStackManager == null)
+            playerStackManager = FindFirstObjectByType<StackManager>();
+
         ResetTimer();
     }
 
     void Update()
     {
-        timer -= Time.deltaTime; // Kurangi waktu mundur
-
+        timer -= Time.deltaTime;
         if (timer <= 0)
         {
             ThrowItem();
@@ -34,24 +33,35 @@ public class ItemSpawner : MonoBehaviour
 
     void ThrowItem()
     {
-        // 1. Pilih barang secara acak (Pisang atau Bom)
         int randomIndex = Random.Range(0, itemPrefabs.Length);
-        GameObject selectedItem = itemPrefabs[randomIndex];
+        GameObject selectedItemPrefab = itemPrefabs[randomIndex];
 
-        // 2. Tentukan posisi X secara acak
-        // (Dari minus xRange sampai positif xRange)
         float randomX = Random.Range(-xRange, xRange);
 
-        // Kita pakai posisi Y dari script FallingItem nanti, jadi disini set 0 dulu gpp
-        Vector3 spawnPos = new Vector3(randomX, 0, 0);
+        // POSISI START TETAP DI ATAS LAYAR (Misal Y=6)
+        // Kita ambil Start Height dari prefab aslinya aja biar aman
+        FallingItem prefabScript = selectedItemPrefab.GetComponent<FallingItem>();
+        float startY = (prefabScript != null) ? prefabScript.startHeight : 6f;
 
-        // 3. Munculkan barangnya (Instantiate)
-        Instantiate(selectedItem, spawnPos, Quaternion.identity);
+        Vector3 spawnPos = new Vector3(randomX, startY, 0);
+
+        // INSTANTIATE
+        GameObject newItem = Instantiate(selectedItemPrefab, spawnPos, Quaternion.identity);
+
+        // --- UPDATE TARGET HEIGHT SECARA DINAMIS ---
+        FallingItem itemScript = newItem.GetComponent<FallingItem>();
+        if (itemScript != null && playerStackManager != null)
+        {
+            // Ambil tinggi tumpukan terkini
+            float currentStackTop = playerStackManager.GetCurrentHeight();
+
+            // Set target si buah ke tinggi tumpukan itu
+            itemScript.targetHeight = currentStackTop;
+        }
     }
 
     void ResetTimer()
     {
-        // Acak waktu untuk lemparan berikutnya biar gak ketebak
         timer = Random.Range(minSpawnTime, maxSpawnTime);
     }
 }
