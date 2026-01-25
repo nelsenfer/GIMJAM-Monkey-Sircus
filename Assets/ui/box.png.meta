@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1a2155cccfcf08446b27266837eef6ed
+guid: fea003e956eed744abd785ba7fa3376e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 198610345067750395
-    second: 9sprite_8bit_circle_outline_0
+      213: 7499154508442906066
+    second: box_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,7 +139,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 9sprite_8bit_circle_outline_0
+      name: box_0
       rect:
         serializedVersion: 2
         x: 0
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bf32b7a7e0b91c200800000000000000
-      internalID: 198610345067750395
+      spriteID: 2dd228f0b49521860800000000000000
+      internalID: 7499154508442906066
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 60aa7ae7ee1164945beff654b54286cf
+    spriteID: 66241e67463cf64459ddab33df2a28ef
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      9sprite_8bit_circle_outline_0: 198610345067750395
+      box_0: 7499154508442906066
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

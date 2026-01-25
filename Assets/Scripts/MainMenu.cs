@@ -2,15 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
     public GameObject SettingUi;
     public GameObject CreditUi;
+    public Image ui;
+
+    private void Update()
+    {
+        if (Testing.selesai == 1)
+        {
+            ui.color = Color.yellow;
+        }
+    }
+
     public void StartGameButton()
     {
         Debug.Log("Mulai Game...");
-        SceneManager.LoadScene("prologue");
+        SceneManager.LoadScene("testing");
     }
 
     public void OptionsButton()
@@ -45,4 +56,11 @@ public class MainMenuManager : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
+
+    public void Fullscreen(bool isFullscreen)
+    {
+        Screen.fullScreen = isFullscreen;
+    }
+
+
 }
