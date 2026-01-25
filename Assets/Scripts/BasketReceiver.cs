@@ -3,8 +3,7 @@ using UnityEngine;
 public class BasketReceiver : MonoBehaviour
 {
     [Header("Visual Effects")]
-    [Tooltip("Masukkan Particle System VFX_Catch ke sini")]
-    public ParticleSystem catchEffect; // Variabel untuk menyimpan efek
+    public ParticleSystem catchEffect;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -14,16 +13,17 @@ public class BasketReceiver : MonoBehaviour
 
             if (itemData != null)
             {
-                // Debug.Log("Menangkap Item! Poin: " + itemData.funValueAmount);
+                // 1. TAMBAH/KURANG SKOR KE BAR
+                // Mengambil nilai funValueAmount dari item (bisa +10 atau -10)
+                GameManager.instance.AddFun(itemData.funValueAmount);
 
-                // --- BARU: NYALAKAN EFEK ---
-                if (catchEffect != null)
+                // 2. Mainkan Efek Visual (Hanya kalau item positif/bagus)
+                if (catchEffect != null && itemData.funValueAmount > 0)
                 {
-                    catchEffect.Play(); // Perintah untuk menyalakan partikel
+                    catchEffect.Play();
                 }
-                // ---------------------------
 
-                // Hancurkan itemnya
+                // 3. Hapus Item
                 Destroy(other.gameObject);
             }
         }
