@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - Item
+  - BubleChat
+  - BubleName
   layers:
   - Default
   - TransparentFX

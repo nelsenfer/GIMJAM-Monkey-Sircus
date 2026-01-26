@@ -3,49 +3,69 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [Header("UI Panels")]
     public GameObject SettingUi;
     public GameObject CreditUi;
     public Image ui;
+    
+    [Header("Ganti Gambar Settings")]
+    [SerializeField] private Sprite gambarBaru;
+    private bool sudahGanti = false;
+
+    [Header("Hover Settings")]
+    [SerializeField] private Color hoverColor = Color.white;
+    [SerializeField] private Color defaultColor = Color.black;
 
     private void Update()
+{
+    if (global::ChangeUi.selesai == 1 && !sudahGanti)
     {
-        if (Testing.selesai == 1)
+        if (ui != null && gambarBaru != null)
         {
-            ui.color = Color.yellow;
+            ui.sprite = gambarBaru; 
+            ui.color = Color.white;
+            sudahGanti = true; 
+        }
+    }
+}
+
+    // FUNGSI HOVER (Tampilan di Event Trigger)
+    public void OnHoverEnter(GameObject buttonObj)
+    {
+        ApplyColor(buttonObj, hoverColor);
+    }
+
+    public void OnHoverExit(GameObject buttonObj)
+    {
+        ApplyColor(buttonObj, defaultColor);
+    }
+
+    private void ApplyColor(GameObject buttonObj, Color targetColor)
+    {
+        TextMeshProUGUI txt = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
+        Transform otlTransform = buttonObj.transform.Find("Outline");
+        
+        if (txt != null) txt.color = targetColor;
+        if (otlTransform != null)
+        {
+            Image img = otlTransform.GetComponent<Image>();
+            if (img != null) img.color = targetColor;
         }
     }
 
-    public void StartGameButton()
-    {
-        Debug.Log("Mulai Game...");
-        SceneManager.LoadScene("testing");
+    // FUNGSI BUTTONS
+    public void StartGameButton() => SceneManager.LoadScene("testing");
+    public void OptionsButton() 
+    { 
+        if (SettingUi != null) SettingUi.SetActive(!SettingUi.activeSelf); 
     }
-
-    public void OptionsButton()
-    {
-        if (SettingUi.activeSelf == false)
-        {
-            SettingUi.SetActive(true);
-        }
-        else
-        {
-            SettingUi.SetActive(false);
-        }
-    }
-
-    public void CreditButton()
-    {
-        if (CreditUi.activeSelf == false)
-        {
-            CreditUi.SetActive(true);
-        }
-        else
-        {
-            CreditUi.SetActive(false);
-        }
+    public void CreditButton() 
+    { 
+        if (CreditUi != null) CreditUi.SetActive(!CreditUi.activeSelf); 
     }
 
     public void QuitGameButton()
