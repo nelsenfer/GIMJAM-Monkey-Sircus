@@ -7,23 +7,32 @@ public class StackManager : MonoBehaviour
     public Transform basketHolder;
 
     [Header("Settings")]
-    public float headYOffset = 2.5f;    // Tinggi awal di atas kepala
-    public float maxStackY = 8.0f;      // <--- BARU: Batas ketinggian tumpukan (Langit-langit)
+    public float headYOffset = 2.5f; // Tinggi start tumpukan (di atas kepala)
+    public float maxStackY = 8.0f;   // Batas langit-langit
 
     [Header("Spacing Settings")]
-    public float normalSpacing = 0.8f;  // Jarak buah segar (pucuk)
-    public float pressedSpacing = 0.3f; // Jarak buah penyok (bawah)
-    public int maxFreshStack = 5;       // <--- GANTI NAMA: Jumlah buah pucuk yang tetap 'segar' (jaraknya normal)
+    public float normalSpacing = 0.5f; // Jarak normal antar buah
+
+    // Variabel pressedSpacing & maxFreshStack DIHAPUS karena kita pakai sistem rata
+
+    [Header("🎭 Physics Sway (Inersia)")]
+    [Range(0f, 0.5f)] public float swayMultiplier = 0.15f;
+    public float swaySmoothness = 5f;
+    public float maxSwayOffset = 1.0f;
 
     private List<Transform> stackedItems = new List<Transform>();
 
-    // Fungsi Getter untuk Spawner
+    private float lastXPosition;
+    private float currentSwayValue;
+
+    void Start()
+    {
+        lastXPosition = transform.position.x;
+    }
+
     public float GetCurrentHeight()
     {
-        if (basketHolder != null)
-        {
-            return basketHolder.position.y;
-        }
+        if (basketHolder != null) return basketHolder.position.y;
         return transform.position.y + headYOffset;
     }
 
@@ -38,7 +47,8 @@ public class StackManager : MonoBehaviour
         stackedItems.Add(fruitTransform);
         fruitTransform.SetParent(transform);
 
-        UpdateStackVisuals();
+        // Update visual sekalian
+        UpdateStackY();
     }
 
     public void RemoveTopItems(int amount)
@@ -53,95 +63,96 @@ public class StackManager : MonoBehaviour
                 Destroy(itemToRemove.gameObject);
             }
         }
-        UpdateStackVisuals();
+        UpdateStackY();
     }
 
-    void UpdateStackVisuals()
+    void LateUpdate()
     {
-        // 1. Hitung dulu berapa buah yang masuk kategori "Segar" (Atas) dan "Penyok" (Bawah)
+        CalculateSwayPhysics();
+        UpdateStackY();
+    }
+
+    void CalculateSwayPhysics()
+    {
+        float currentX = transform.position.x;
+        float velocity = (currentX - lastXPosition) / Time.deltaTime;
+        lastXPosition = currentX;
+
+        float targetSway = -velocity * swayMultiplier;
+        targetSway = Mathf.Clamp(targetSway, -maxSwayOffset, maxSwayOffset);
+
+        currentSwayValue = Mathf.Lerp(currentSwayValue, targetSway, Time.deltaTime * swaySmoothness);
+    }
+
+    void UpdateStackY()
+    {
         int totalCount = stackedItems.Count;
-        int freshCount = Mathf.Min(totalCount, maxFreshStack); // Maksimal misal 5 buah teratas
-        int squashedCount = totalCount - freshCount; // Sisanya di bawah
+        if (totalCount == 0) return;
 
-        // 2. Hitung Tinggi yang dibutuhkan oleh buah Segar
-        float heightUsedByFresh = freshCount * normalSpacing;
+        // --- LOGIKA BARU: KOMPRESI RATA (UNIFORM) ---
 
-        // 3. Hitung Sisa Ruang untuk buah Penyok
-        // Rumus: (LangitLangit - OffsetKepala) - RuangBuahSegar
-        // Kita hitung dalam Global Position dulu biar gampang, lalu konversi
-        float absoluteMaxY = transform.position.y + maxStackY; // Posisi Y dunia batas atas
-        float absoluteStartY = transform.position.y + headYOffset; // Posisi Y dunia kepala
-        float totalAvailableHeight = maxStackY - headYOffset; // Ruang total dalam lokal
+        // 1. Hitung ruang yang tersedia dari kepala sampai langit-langit
+        float totalAvailableHeight = maxStackY - headYOffset;
 
-        float heightAvailableForSquashed = totalAvailableHeight - heightUsedByFresh;
+        // 2. Hitung kalau pakai jarak normal butuh berapa meter?
+        float requiredHeight = totalCount * normalSpacing;
 
-        // 4. Tentukan Spacing untuk buah penyok secara DINAMIS
-        float currentSquashedSpacing = pressedSpacing; // Default awal
+        // 3. Tentukan Jarak (Spacing) Final
+        float currentSpacing = normalSpacing;
 
-        if (squashedCount > 0)
+        // Kalau ternyata butuh ruang lebih besar dari yang tersedia...
+        if (requiredHeight > totalAvailableHeight)
         {
-            // Jika ruang sisa lebih kecil daripada yang dibutuhkan normalnya...
-            if ((squashedCount * pressedSpacing) > heightAvailableForSquashed)
-            {
-                // FORCE COMPRESS!
-                // Bagi sisa ruang dengan jumlah buah penyok. 
-                // Hasilnya bisa sangat kecil (0.01) -> Efek garis-garis
-                currentSquashedSpacing = heightAvailableForSquashed / squashedCount;
+            // ...maka kita bagi rata ruang yang ada untuk SEMUA item
+            // Hasilnya: Semua item akan mengecil jaraknya barengan
+            currentSpacing = totalAvailableHeight / totalCount;
 
-                // Opsional: Batasi biar gak minus (minimal 0.01f)
-                currentSquashedSpacing = Mathf.Max(0.01f, currentSquashedSpacing);
-            }
+            // Jaga-jaga biar gak terlalu gepeng (negatif/nol)
+            currentSpacing = Mathf.Max(0.05f, currentSpacing);
         }
 
-        // --- MULAI MENATA POSISI ---
-        float currentY = headYOffset;
+        // --- PENERAPAN POSISI ---
+        float currentLocalY = headYOffset;
 
         for (int i = 0; i < totalCount; i++)
         {
             Transform item = stackedItems[i];
 
-            // Set posisi
-            item.localPosition = new Vector3(0, currentY, 0);
+            // Posisi Y
+            float yPos = currentLocalY;
 
-            // Sorting Order (Makin atas makin depan)
+            // Posisi X (Miring/Sway)
+            float xOffset = i * currentSwayValue;
+
+            item.localPosition = new Vector3(xOffset, yPos, 0);
+
+            // Sorting
             SpriteRenderer sr = item.GetComponent<SpriteRenderer>();
             if (sr != null) sr.sortingOrder = 10 + i;
 
-            // Tentukan jarak untuk item BERIKUTNYA
-            // Apakah item ini masuk golongan bawah (Squashed) atau atas (Fresh)?
-            // Kita cek indexnya.
-            // Index 0 sampai (squashedCount - 1) adalah item bawah.
-
-            if (i < squashedCount)
-            {
-                currentY += currentSquashedSpacing; // Pakai jarak super gepeng
-            }
-            else
-            {
-                currentY += normalSpacing; // Pakai jarak normal
-            }
+            // Tambahkan jarak (Spacingnya sudah sama rata untuk semua item)
+            currentLocalY += currentSpacing;
         }
 
         // --- UPDATE KERANJANG ---
         if (basketHolder != null)
         {
-            // Keranjang ada di pucuk tumpukan
-            // Kita clamp (kunci) biar gak pernah melebihi MaxY
-            float basketY = Mathf.Min(currentY + 0.5f, maxStackY);
-            basketHolder.localPosition = new Vector3(0, basketY, 0);
+            float basketX = totalCount * currentSwayValue;
+            // Keranjang menempel di item paling atas
+            float basketY = currentLocalY;
+
+            // Safety: Pastikan gak visualnya bablas
+            basketY = Mathf.Min(basketY, maxStackY + 0.5f);
+
+            basketHolder.localPosition = new Vector3(basketX, basketY, 0);
         }
     }
 
-    // Visualisasi batas Max di Scene View biar enak settingnya
     void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        // Gambar garis batas atas relative terhadap player
         Vector3 topLimit = transform.position + new Vector3(0, maxStackY, 0);
         Vector3 bottomLimit = transform.position + new Vector3(0, headYOffset, 0);
-
-        Gizmos.DrawLine(topLimit - Vector3.right * 2, topLimit + Vector3.right * 2);
-        Gizmos.DrawLine(bottomLimit, topLimit); // Garis vertikal indikator tinggi
-        Gizmos.DrawWireSphere(topLimit, 0.3f);
+        Gizmos.DrawLine(bottomLimit, topLimit);
     }
 }

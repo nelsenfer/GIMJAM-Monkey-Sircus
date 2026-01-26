@@ -2,15 +2,13 @@ using UnityEngine;
 
 public class BasketReceiver : MonoBehaviour
 {
-    // Cari script StackManager di induk (Player)
-    private StackManager stackManager;
-
     [Header("Visual Effects")]
     public ParticleSystem catchEffect;
 
+    private StackManager stackManager;
+
     void Start()
     {
-        // Mencari script StackManager di object Parent (Monyet)
         stackManager = GetComponentInParent<StackManager>();
     }
 
@@ -22,28 +20,37 @@ public class BasketReceiver : MonoBehaviour
 
             if (itemData != null)
             {
-                // BUAH BAGUS (+Fun)
+                // A. ITEM BAGUS (Buah)
                 if (itemData.funValueAmount > 0)
                 {
-                    if (stackManager != null) stackManager.AddToStack(other.gameObject);
+                    // Update Skor
+                    if (GameManager.instance != null)
+                    {
+                        GameManager.instance.AddFun(itemData.funValueAmount);
+                    }
 
-                    // Mainkan efek partikel happy
-                    if (catchEffect != null) catchEffect.Play();
-                }
-                // BOM / SAMPAH (-Fun)
-                else
-                {
-                    // Hancurkan Bom-nya
-                    Destroy(other.gameObject);
-
-                    // Hukum Player: Hilangkan 3 buah teratas!
+                    // Tumpuk Item
                     if (stackManager != null)
                     {
-                        stackManager.RemoveTopItems(3);
-
-                        // TODO: Tambah efek ledakan disini nanti
-                        Debug.Log("DUAR! Tumpukan hancur 3 biji!");
+                        stackManager.AddToStack(other.gameObject);
                     }
+
+                    if (catchEffect != null) catchEffect.Play();
+                }
+                // B. BOM (Item Jahat)
+                else
+                {
+                    // 1. Hancurkan Object Bom
+                    Destroy(other.gameObject);
+
+                    // 2. KURANGI NYAWA ❤️
+                    if (GameManager.instance != null)
+                    {
+                        GameManager.instance.ReduceLife();
+                    }
+
+                    // (Opsional) Efek ledakan visual bisa ditaruh sini nanti
+                    Debug.Log("DUAR! Bom Meledak! Nyawa berkurang.");
                 }
             }
         }

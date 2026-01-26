@@ -137,12 +137,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2bf4e96432b14a4c9bf380c338244d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHeight: -3
-  targetHeight: -3
-  arcHeight: 7
+  startHeight: 0
+  targetHeight: 0
+  arcHeight: 6
   startOrder: 100
   targetOrder: 1
   fallDuration: 2
   startScale: 2
   endScale: 0.5
-  funValueAmount: -5
+  funValueAmount: -3
