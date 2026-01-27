@@ -201,8 +201,8 @@ TextureImporter:
       name: bubble-name_2
       rect:
         serializedVersion: 2
-        x: 1581
-        y: 0
+        x: 1571
+        y: 4
         width: 321
         height: 146
       alignment: 0

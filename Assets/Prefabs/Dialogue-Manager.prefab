@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -82, y: -12}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 59.86474, y: -1.0142}
+  m_SizeDelta: {x: 536.3052, y: 112.9716}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4637687749786003631
 CanvasRenderer:
@@ -131,7 +131,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: -46.795837, z: -296.86365, w: -11.69899}
+  m_margin: {x: 0, y: 0.03477478, z: -0.088012695, w: 0.36706161}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -197,16 +197,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1773414161965521259}
-  m_LocalRotation: {x: -0, y: -0, z: 0.15002634, w: 0.98868203}
+  m_LocalRotation: {x: -0, y: -0, z: 0.15231586, w: 0.9883319}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4806040599360440863}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 17.257}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 17.522}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 64, y: 20}
+  m_AnchoredPosition: {x: 62.4, y: 24.9}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1298681319568430509
@@ -237,17 +237,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Tino
+  m_text: TINO
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e3b631456523e124eb526cf4f95abfc5, type: 2}
+  m_sharedMaterial: {fileID: -7284910991374436845, guid: e3b631456523e124eb526cf4f95abfc5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4278732187
+  m_fontColor: {r: 0.60784316, g: 0.27058825, b: 0.03137255, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -271,8 +271,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 111.52301, w: 0}
+  m_margin: {x: -34.84687, y: 0, z: 61.043465, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -416,7 +416,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2008216512621824963}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -458,7 +458,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 221, y: -82}
-  m_SizeDelta: {x: 723, y: 299.5}
+  m_SizeDelta: {x: 728, y: 186}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8439720898842665137
 CanvasRenderer:
@@ -528,7 +528,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5499679318439731849}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -587,11 +587,8 @@ MonoBehaviour:
   spriteAnimator: {fileID: 221760235110545407}
   daftarDialog:
   - namaKarakter: TIno
-    isiTeks: aku mau makan baksu goreng
+    isiTeks: aku mau makan bakso goreng
     namaEkspresi: Senang
-  - namaKarakter: Tino
-    isiTeks: Iyakah emang seenak itu?
-    namaEkspresi: Antusias
   ekspresiSenang: {fileID: 2024973567894393489, guid: 9775517a1adfacf4b951964a1424093d, type: 3}
   ekspresiTalk: {fileID: 166294786668881955, guid: 9ed337180427a7442bf2c6be4570978c, type: 3}
   ekspresiIdle: {fileID: 8793639957104055765, guid: f376c7ba66a2fc8488affdd67c9032b7, type: 3}
@@ -701,7 +698,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6336300262109015110}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

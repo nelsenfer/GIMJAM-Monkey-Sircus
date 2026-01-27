@@ -157,12 +157,12 @@ TextureImporter:
       name: bubble-chat_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 8
-        width: 724
-        height: 239
+        x: 0
+        y: 0
+        width: 729
+        height: 186
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -179,12 +179,12 @@ TextureImporter:
       name: bubble-chat_1
       rect:
         serializedVersion: 2
-        x: 776
-        y: 8
-        width: 726
-        height: 239
+        x: 766
+        y: 0
+        width: 738
+        height: 186
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -201,12 +201,12 @@ TextureImporter:
       name: bubble-chat_2
       rect:
         serializedVersion: 2
-        x: 1568
-        y: 4
-        width: 741
-        height: 240
+        x: 1549
+        y: 0
+        width: 730
+        height: 186
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -223,12 +223,12 @@ TextureImporter:
       name: bubble-chat_3
       rect:
         serializedVersion: 2
-        x: 2364
-        y: 8
-        width: 737
-        height: 239
+        x: 2301
+        y: 0
+        width: 730
+        height: 186
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -245,12 +245,12 @@ TextureImporter:
       name: bubble-chat_4
       rect:
         serializedVersion: 2
-        x: 3141
-        y: 3
-        width: 724
-        height: 241
+        x: 3054
+        y: 0
+        width: 729
+        height: 186
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -267,12 +267,12 @@ TextureImporter:
       name: bubble-chat_5
       rect:
         serializedVersion: 2
-        x: 3930
-        y: 0
-        width: 712
-        height: 240
+        x: 3805
+        y: 5
+        width: 729
+        height: 181
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -289,7 +289,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 4bd758deeb70ff640a23b9430fb29c73
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 

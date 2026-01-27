@@ -11,7 +11,7 @@ public class MainMenuManager : MonoBehaviour
     public GameObject SettingUi;
     public GameObject CreditUi;
     public Image ui;
-    
+
     [Header("Ganti Gambar Settings")]
     [SerializeField] private Sprite gambarBaru;
     private bool sudahGanti = false;
@@ -20,18 +20,52 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private Color hoverColor = Color.white;
     [SerializeField] private Color defaultColor = Color.black;
 
-    private void Update()
-{
-    if (global::ChangeUi.selesai == 1 && !sudahGanti)
+    public TMP_Dropdown resolutionDropdown;
+    Resolution[] resolutions;
+
+    private void Start()
     {
-        if (ui != null && gambarBaru != null)
+        resolutions = Screen.resolutions;
+        resolutionDropdown.ClearOptions(); // Ditambah 's'
+        List<string> options = new List<string>();
+
+        int currentResolutionIndex = 0;
+        for (int i = 0; i < resolutions.Length; i++) // Perbaikan Length
         {
-            ui.sprite = gambarBaru; 
-            ui.color = Color.white;
-            sudahGanti = true; 
+            string option = resolutions[i].width + " x " + resolutions[i].height;
+            options.Add(option);
+
+            if (resolutions[i].width == Screen.currentResolution.width &&
+                resolutions[i].height == Screen.currentResolution.height)
+            {
+                currentResolutionIndex = i;
+            }
+        }
+
+        resolutionDropdown.AddOptions(options); // Harus memasukkan list 'options'
+        resolutionDropdown.value = currentResolutionIndex;
+        resolutionDropdown.RefreshShownValue(); // Perbaikan nama fungsi
+    }
+
+    public void SetResolution(int resolutionIndex)
+    {
+        Resolution resolution = resolutions[resolutionIndex];
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+    }
+
+
+    private void Update()
+    {
+        if (global::ChangeUi.selesai == 1 && !sudahGanti)
+        {
+            if (ui != null && gambarBaru != null)
+            {
+                ui.sprite = gambarBaru;
+                ui.color = Color.white;
+                sudahGanti = true;
+            }
         }
     }
-}
 
     // FUNGSI HOVER (Tampilan di Event Trigger)
     public void OnHoverEnter(GameObject buttonObj)
@@ -48,7 +82,7 @@ public class MainMenuManager : MonoBehaviour
     {
         TextMeshProUGUI txt = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
         Transform otlTransform = buttonObj.transform.Find("Outline");
-        
+
         if (txt != null) txt.color = targetColor;
         if (otlTransform != null)
         {
@@ -59,13 +93,13 @@ public class MainMenuManager : MonoBehaviour
 
     // FUNGSI BUTTONS
     public void StartGameButton() => SceneManager.LoadScene("testing");
-    public void OptionsButton() 
-    { 
-        if (SettingUi != null) SettingUi.SetActive(!SettingUi.activeSelf); 
+    public void OptionsButton()
+    {
+        if (SettingUi != null) SettingUi.SetActive(!SettingUi.activeSelf);
     }
-    public void CreditButton() 
-    { 
-        if (CreditUi != null) CreditUi.SetActive(!CreditUi.activeSelf); 
+    public void CreditButton()
+    {
+        if (CreditUi != null) CreditUi.SetActive(!CreditUi.activeSelf);
     }
 
     public void QuitGameButton()
