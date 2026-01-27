@@ -34,10 +34,7 @@ public class PlayerController : MonoBehaviour
             jumpRequest = true;
         }
 
-        // --- UPDATE ANIMATOR ---
-        // Kita kirim nilai mentah (-1, 0, 1) ke parameter "InputX"
-        // Biarkan Animator yang menentukan mau putar klip Maju atau Mundur
-        anim.SetFloat("InputX", -moveInput);
+        anim.SetFloat("InputX", moveInput);
     }
 
     void FixedUpdate()

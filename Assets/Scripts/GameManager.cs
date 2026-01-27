@@ -186,6 +186,7 @@ public class GameManager : MonoBehaviour
             splashText.SetActive(false);
         }
     }
+
     void UpdateHeartUI()
     {
         if (heartIcons == null) return;

@@ -19,6 +19,14 @@ public class FallingItem : MonoBehaviour
     [Header("---- Game Data ----")]
     public int funValueAmount = 10; // Kalau positif = Buah, Negatif = Bom
 
+    [Header("---- Stack Tuning (PENTING) 🔧 ----")]
+
+    [Tooltip("Geser gambar ini ke Bawah/Atas. (Negatif = Turun, Positif = Naik). Gunakan ini biar pantat buah nempel.")]
+    public float visualOffsetY = 0.0f;
+
+    [Tooltip("Kurangi tinggi tumpukan untuk item BERIKUTNYA. (Makin Besar = Item atas makin turun).")]
+    public float heightReduction = 0.0f;
+
     private float timer = 0;
     private Vector3 startPos;
     private Vector3 targetPos;

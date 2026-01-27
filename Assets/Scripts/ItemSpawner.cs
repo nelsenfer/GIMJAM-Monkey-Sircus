@@ -3,8 +3,8 @@ using UnityEngine;
 public class ItemSpawner : MonoBehaviour
 {
     [Header("Settings")]
-    public GameObject[] fruitPrefabs;
-    public GameObject bombPrefab;
+    public GameObject[] fruitPrefabs; // Array Buah Bagus
+    public GameObject[] bombPrefabs;  // Array Bom (Bisa banyak variasi)
 
     [Header("🎯 Auto-Spawn Area (PENTING)")]
     [Tooltip("Tarik object Tali/Ground yang punya BoxCollider2D ke sini")]
@@ -26,7 +26,6 @@ public class ItemSpawner : MonoBehaviour
     {
         playerStack = FindAnyObjectByType<StackManager>();
 
-        // Error handling kalau lupa masukin ground
         if (groundCollider == null)
         {
             Debug.LogError("⚠️ LUPA MASUKIN COLLIDER TALI di ItemSpawner!");
@@ -51,54 +50,58 @@ public class ItemSpawner : MonoBehaviour
 
         if (groundCollider != null)
         {
-            // Ambil batas kiri dan kanan dari Collider Tali
             float minX = groundCollider.bounds.min.x + padding;
             float maxX = groundCollider.bounds.max.x - padding;
-
-            // Acak posisi di antara batas itu
             spawnX = Random.Range(minX, maxX);
         }
         else
         {
-            // Fallback kalau lupa setting (pakai cara lama manual)
             spawnX = Random.Range(-2.5f, 2.5f);
         }
 
         Vector3 spawnPos = new Vector3(spawnX, startHeight, 0);
 
-        // 2. PILIH ITEM (Logika sama kayak sebelumnya)
-        GameObject prefabToSpawn;
+        // 2. PILIH ITEM (LOGIKA BARU DI SINI)
+        GameObject prefabToSpawn = null; // Siapkan wadah kosong
+
+        // Cek: Apakah Buah ada isinya?
         if (fruitPrefabs.Length > 0)
         {
-            if (Random.value < bombChance && bombPrefab != null)
+            // Roll Dadu: Apakah spawn Bom? DAN Apakah kita punya daftar Bom?
+            if (Random.value < bombChance && bombPrefabs.Length > 0)
             {
-                prefabToSpawn = bombPrefab;
+                // --- PILIH BOM ACAK DARI ARRAY ---
+                int randomIndex = Random.Range(0, bombPrefabs.Length);
+                prefabToSpawn = bombPrefabs[randomIndex];
             }
             else
             {
+                // --- PILIH BUAH BAGUS ACAK ---
                 int randomIndex = Random.Range(0, fruitPrefabs.Length);
                 prefabToSpawn = fruitPrefabs[randomIndex];
             }
 
-            // 3. SPAWN
-            GameObject newItem = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
-
-            // 4. SET TARGET (Biar jatuh ke keranjang)
-            FallingItem itemScript = newItem.GetComponent<FallingItem>();
-            if (itemScript != null)
+            // 3. SPAWN (Hanya jika prefabToSpawn ada isinya)
+            if (prefabToSpawn != null)
             {
-                float targetY = -3f;
-                if (playerStack != null)
+                GameObject newItem = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+
+                // 4. SET TARGET
+                FallingItem itemScript = newItem.GetComponent<FallingItem>();
+                if (itemScript != null)
                 {
-                    targetY = playerStack.GetCurrentHeight();
+                    float targetY = -3f;
+                    if (playerStack != null)
+                    {
+                        targetY = playerStack.GetCurrentHeight();
+                    }
+                    itemScript.targetHeight = targetY;
+                    itemScript.startHeight = startHeight;
                 }
-                itemScript.targetHeight = targetY;
-                itemScript.startHeight = startHeight;
             }
         }
     }
 
-    // Visualisasi Area Spawn di Scene View (Biar kelihatan garisnya)
     void OnDrawGizmos()
     {
         if (groundCollider != null)
@@ -106,11 +109,8 @@ public class ItemSpawner : MonoBehaviour
             Gizmos.color = Color.green;
             float minX = groundCollider.bounds.min.x + padding;
             float maxX = groundCollider.bounds.max.x - padding;
-
-            // Gambar garis area spawn di atas
             Vector3 lineStart = new Vector3(minX, startHeight, 0);
             Vector3 lineEnd = new Vector3(maxX, startHeight, 0);
-
             Gizmos.DrawLine(lineStart, lineEnd);
             Gizmos.DrawWireSphere(lineStart, 0.2f);
             Gizmos.DrawWireSphere(lineEnd, 0.2f);

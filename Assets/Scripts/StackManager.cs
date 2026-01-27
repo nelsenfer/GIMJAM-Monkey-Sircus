@@ -41,21 +41,22 @@ public class StackManager : MonoBehaviour
 
     public void AddToStack(GameObject fruit)
     {
-        // 1. Matikan physics
+
         Destroy(fruit.GetComponent<Rigidbody2D>());
         Destroy(fruit.GetComponent<Collider2D>());
-        Destroy(fruit.GetComponent<FallingItem>());
+
+        FallingItem itemScript = fruit.GetComponent<FallingItem>();
+        if (itemScript != null)
+        {
+            itemScript.enabled = false;
+        }
 
         Transform fruitTransform = fruit.transform;
         stackedItems.Add(fruitTransform);
         fruitTransform.SetParent(transform);
 
-        // 2. Update visual
         UpdateStackY();
 
-        // --- UPDATE: PAKAI VARIABEL SPLASH LIMIT ---
-        // Dulu: if (stackedItems.Count >= 10)
-        // Sekarang: Pakai variabel biar fleksibel
         if (stackedItems.Count >= splashLimit)
         {
             TriggerSplashEvent();
@@ -124,22 +125,8 @@ public class StackManager : MonoBehaviour
         int totalCount = stackedItems.Count;
         if (totalCount == 0)
         {
-            // Reset posisi keranjang kalau kosong
-            if (basketHolder != null)
-            {
-                basketHolder.localPosition = new Vector3(0, headYOffset, 0);
-            }
+            if (basketHolder != null) basketHolder.localPosition = new Vector3(0, headYOffset, 0);
             return;
-        }
-
-        float totalAvailableHeight = maxStackY - headYOffset;
-        float requiredHeight = totalCount * normalSpacing;
-        float currentSpacing = normalSpacing;
-
-        if (requiredHeight > totalAvailableHeight)
-        {
-            currentSpacing = totalAvailableHeight / totalCount;
-            currentSpacing = Mathf.Max(0.05f, currentSpacing);
         }
 
         float currentLocalY = headYOffset;
@@ -147,23 +134,45 @@ public class StackManager : MonoBehaviour
         for (int i = 0; i < totalCount; i++)
         {
             Transform item = stackedItems[i];
+            SpriteRenderer sr = item.GetComponent<SpriteRenderer>();
 
-            float yPos = currentLocalY;
+            // 1. AMBIL DATA DARI INSPECTOR
+            FallingItem itemScript = item.GetComponent<FallingItem>();
+            float myVisualOffset = 0f;     // Geser diri sendiri
+            float myHeightReduction = 0f;  // Tarik item atas
+
+            if (itemScript != null)
+            {
+                myVisualOffset = itemScript.visualOffsetY;
+                myHeightReduction = itemScript.heightReduction;
+            }
+
+            // 2. UKUR TINGGI ASLI
+            float spriteHeight = 0.5f;
+            if (sr != null) spriteHeight = sr.bounds.size.y;
+
+            // 3. TENTUKAN POSISI DIRI SENDIRI (Dipengaruhi Visual Offset)
+            // Logic: Lantai + Setengah Tinggi + Koreksi Posisi Manual
+            float halfHeight = spriteHeight / 2f;
+            float yPos = currentLocalY + halfHeight + myVisualOffset;
+
+            // 4. SET POSISI
             float xOffset = i * currentSwayValue;
-
             item.localPosition = new Vector3(xOffset, yPos, 0);
 
-            SpriteRenderer sr = item.GetComponent<SpriteRenderer>();
+            // 5. SORTING ORDER
             if (sr != null) sr.sortingOrder = 10 + i;
 
-            currentLocalY += currentSpacing;
+            // 6. SIAPKAN LANTAI UNTUK ITEM SELANJUTNYA (Dipengaruhi Height Reduction)
+            // Logic: Lantai Naik setinggi gambar, tapi dikurangi 'Height Reduction' biar item atas turun
+            currentLocalY += spriteHeight - 0.1f - myHeightReduction;
         }
 
+        // Update Keranjang
         if (basketHolder != null)
         {
             float basketX = totalCount * currentSwayValue;
-            float basketY = Mathf.Min(currentLocalY, maxStackY + 0.5f);
-            basketHolder.localPosition = new Vector3(basketX, basketY, 0);
+            basketHolder.localPosition = new Vector3(basketX, currentLocalY, 0);
         }
     }
 
