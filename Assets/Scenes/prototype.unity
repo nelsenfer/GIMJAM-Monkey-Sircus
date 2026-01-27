@@ -258,13 +258,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47358acb52781aa4c909f6771a8749cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPrefabs:
-  - {fileID: 2728051331122949344, guid: 712560723b7a25c449340ddab3f898ea, type: 3}
-  - {fileID: 3449275796817891958, guid: db59ba0d236a0c145b1be16699cff1c9, type: 3}
-  minSpawnTime: 1
-  maxSpawnTime: 3
-  xRange: 7
-  playerStackManager: {fileID: 0}
+  fruitPrefabs: []
+  bombPrefab: {fileID: 0}
+  groundCollider: {fileID: 1915769679}
+  padding: 0.5
+  startHeight: 6
+  spawnInterval: 2
+  bombChance: 0.1
 --- !u!4 &259647638
 Transform:
   m_ObjectHideFlags: 0
