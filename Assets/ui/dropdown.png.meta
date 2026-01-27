@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e3c72999003e6d94f87706cdac5c481a
+guid: 3ef4f18da61400b48ae27b027960c61d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 232925223661152402
-    second: rectangle-outline 1_0
+      213: 8927853592754505089
+    second: dropdown_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,23 +139,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: rectangle-outline 1_0
+      name: dropdown_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1155
-        height: 421
+        width: 563
+        height: 593
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 120, y: 120, z: 120, w: 120}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2982d8fb1448b3300800000000000000
-      internalID: 232925223661152402
+      spriteID: 185c3d27a8b16eb70800000000000000
+      internalID: 8927853592754505089
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 57736b5b601726b4e985cd4e99b527e8
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      rectangle-outline 1_0: 232925223661152402
+      dropdown_0: 8927853592754505089
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

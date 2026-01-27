@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0f1277472336e2a47ba95edecfd34fd0
+guid: 3f22c48f68da2e24197a47f036637336
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2911089413330275477
-    second: rectangle 2_0
+      213: -191935132932334615
+    second: kertas vintage eaks_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,23 +139,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: rectangle 2_0
+      name: kertas vintage eaks_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1155
-        height: 421
+        width: 1536
+        height: 2048
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 120, y: 120, z: 120, w: 120}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b637c092a9bb997d0800000000000000
-      internalID: -2911089413330275477
+      spriteID: 9eb96a5730c165df0800000000000000
+      internalID: -191935132932334615
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 64658340aa6a98846b80daae8b0e7061
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      rectangle 2_0: -2911089413330275477
+      kertas vintage eaks_0: -191935132932334615
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
