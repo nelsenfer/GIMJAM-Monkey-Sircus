@@ -9,7 +9,8 @@ public class AudioManager : MonoBehaviour
     // untuk menaruh audio(bgm / sfx)
     [Header("---------- Audio Clip ----------")]
     public AudioClip background;
-    public AudioClip huh;
+    public AudioClip hover;
+    public AudioClip hit;
 
     private void Start()
     {

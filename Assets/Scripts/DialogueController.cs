@@ -18,7 +18,6 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textNama;
     [SerializeField] private TextMeshProUGUI dialogText;
     [SerializeField] private Animator bubbleAnimator;
-    [SerializeField] private Animator bubbleNameAnimator;
     [SerializeField] private Animator spriteAnimator;
 
     [Header("Daftar Dialog")]
@@ -49,10 +48,7 @@ public class DialogueController : MonoBehaviour
         {
             DialogueLine barisBaru = daftarDialog[indexSekarang];
 
-            // LOGIKA ANIMASI MUNCUL:
-            // Munculkan animasi hanya jika:
-            // 1. Ini dialog pertama kali (index -1 ke 0)
-            // 2. Karakter yang bicara berbeda dari sebelumnya
+            
             if (indexSebelumnya == -1 || barisBaru.namaKarakter != daftarDialog[indexSebelumnya].namaKarakter)
             {
                 bubbleManager.TampilkanSemua();
@@ -61,14 +57,11 @@ public class DialogueController : MonoBehaviour
             // Update konten teks dan sprite
             UpdateVisualDialog(indexSekarang);
         }
-        // LOGIKA JIKA ARRAY HABIS:
         else
         {
-            // Memicu animasi fade out dan bergerak keluar
             bubbleManager.SembunyikanSemua();
-
-            // Opsional: Reset index jika ingin dialog bisa diulang dari awal nanti
             indexSekarang = -1;
+            //Tutorial.Instance.tutorialSelesai();
         }
     }
 

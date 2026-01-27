@@ -26,7 +26,7 @@ public class MainMenuManager : MonoBehaviour
     private void Start()
     {
         resolutions = Screen.resolutions;
-        resolutionDropdown.ClearOptions(); // Ditambah 's'
+        resolutionDropdown.ClearOptions();
         List<string> options = new List<string>();
 
         int currentResolutionIndex = 0;
@@ -42,9 +42,9 @@ public class MainMenuManager : MonoBehaviour
             }
         }
 
-        resolutionDropdown.AddOptions(options); // Harus memasukkan list 'options'
+        resolutionDropdown.AddOptions(options);
         resolutionDropdown.value = currentResolutionIndex;
-        resolutionDropdown.RefreshShownValue(); // Perbaikan nama fungsi
+        resolutionDropdown.RefreshShownValue();
     }
 
     public void SetResolution(int resolutionIndex)
@@ -92,7 +92,17 @@ public class MainMenuManager : MonoBehaviour
     }
 
     // FUNGSI BUTTONS
-    public void StartGameButton() => SceneManager.LoadScene("testing");
+    public void StartGameButton()
+    {
+        if (global::Tutorial.sudahTutorial == 1)
+        {
+            SceneManager.LoadScene("prototype");
+        }
+        else
+        {
+            SceneManager.LoadScene("Tutorial");
+        }
+    }
     public void OptionsButton()
     {
         if (SettingUi != null) SettingUi.SetActive(!SettingUi.activeSelf);

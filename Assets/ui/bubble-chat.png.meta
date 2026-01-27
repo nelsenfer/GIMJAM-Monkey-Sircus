@@ -1,25 +1,10 @@
 fileFormatVersion: 2
-guid: 55b71e28e26a2b64189380b9a5d523a1
+guid: 81a03accaa6c6db4496a1efc05cb42f9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3563166725733238959
-    second: bubble-chat_0
-  - first:
-      213: -3949798828332590122
-    second: bubble-chat_1
-  - first:
-      213: -808892056747408737
-    second: bubble-chat_2
-  - first:
-      213: 5039167266327580874
-    second: bubble-chat_3
-  - first:
-      213: 2722367571732375194
-    second: bubble-chat_4
-  - first:
-      213: 7939270274052128502
-    second: bubble-chat_5
+      213: -1813451030973576681
+    second: bubble text.asset_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -154,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: bubble-chat_0
+      name: bubble text.asset_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 729
-        height: 186
+        x: 8
+        y: 24
+        width: 992
+        height: 340
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,118 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 157bd2dcdb61d8ec0800000000000000
-      internalID: -3563166725733238959
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bubble-chat_1
-      rect:
-        serializedVersion: 2
-        x: 766
-        y: 0
-        width: 738
-        height: 186
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6db5bfe74ee7f29c0800000000000000
-      internalID: -3949798828332590122
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bubble-chat_2
-      rect:
-        serializedVersion: 2
-        x: 1549
-        y: 0
-        width: 730
-        height: 186
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f928fe7c5fc36c4f0800000000000000
-      internalID: -808892056747408737
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bubble-chat_3
-      rect:
-        serializedVersion: 2
-        x: 2301
-        y: 0
-        width: 730
-        height: 186
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ac05b391ee7bee540800000000000000
-      internalID: 5039167266327580874
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bubble-chat_4
-      rect:
-        serializedVersion: 2
-        x: 3054
-        y: 0
-        width: 729
-        height: 186
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a96a62df1eac7c520800000000000000
-      internalID: 2722367571732375194
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bubble-chat_5
-      rect:
-        serializedVersion: 2
-        x: 3805
-        y: 5
-        width: 729
-        height: 181
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6fef1bc0044fd2e60800000000000000
-      internalID: 7939270274052128502
+      spriteID: 71a014935e355d6e0800000000000000
+      internalID: -1813451030973576681
       vertices: []
       indices: 
       edges: []
@@ -299,12 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      bubble-chat_0: -3563166725733238959
-      bubble-chat_1: -3949798828332590122
-      bubble-chat_2: -808892056747408737
-      bubble-chat_3: 5039167266327580874
-      bubble-chat_4: 2722367571732375194
-      bubble-chat_5: 7939270274052128502
+      bubble text.asset_0: -1813451030973576681
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
