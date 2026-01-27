@@ -4,13 +4,11 @@ public class FallingItem : MonoBehaviour
 {
     [Header("---- Height & Arc Settings ----")]
     public float startHeight = 6.0f;
-    public float targetHeight = -2.0f;
+    public float targetHeight = -2.0f; // Nanti ditimpa oleh Spawner
     public float arcHeight = 2.0f;
 
     [Header("---- Visual Depth (Layer) ----")]
-    [Tooltip("Urutan Layer saat baru muncul (Harus tinggi biar di depan)")]
     public int startOrder = 100;
-    [Tooltip("Urutan Layer saat mendarat (Samakan dengan layer Monyet)")]
     public int targetOrder = 5;
 
     [Header("---- Fall Settings ----")]
@@ -19,7 +17,7 @@ public class FallingItem : MonoBehaviour
     public float endScale = 0.6f;
 
     [Header("---- Game Data ----")]
-    public int funValueAmount = 10;
+    public int funValueAmount = 10; // Kalau positif = Buah, Negatif = Bom
 
     private float timer = 0;
     private Vector3 startPos;
@@ -27,7 +25,7 @@ public class FallingItem : MonoBehaviour
     private Collider2D col;
     private SpriteRenderer sr;
     private bool isCatchable = false;
-    private bool hasMissed = false; // <-- Status baru: Sudah lewat target
+    private bool hasMissed = false; // Status: Apakah sudah lewat target?
 
     void Start()
     {
@@ -36,7 +34,6 @@ public class FallingItem : MonoBehaviour
 
         if (col != null) col.enabled = false;
 
-        // Kunci X biar lurus vertikal
         startPos = new Vector3(transform.position.x, startHeight, 0);
         targetPos = new Vector3(transform.position.x, targetHeight, 0);
 
@@ -51,16 +48,15 @@ public class FallingItem : MonoBehaviour
         timer += Time.deltaTime;
         float progress = timer / fallDuration;
 
-        // --- PERUBAHAN UTAMA DI SINI ---
-        // Kita biarkan progress lewat sampai 1.5 (150%) biar jatuh terus ke bawah
+        // Kita biarkan progress lewat sampai 1.5 biar jatuh terus ke bawah
         if (progress <= 1.5f)
         {
-            // 1. GERAKAN PARABOLA (Rumus ini tetap bekerja walaupun progress > 1)
+            // 1. GERAKAN
             Vector3 linearPos = Vector3.LerpUnclamped(startPos, targetPos, progress);
             float heightOffset = 4 * arcHeight * progress * (1 - progress);
             transform.position = linearPos + new Vector3(0, heightOffset, 0);
 
-            // 2. SCALING & SORTING ORDER (Mentok di 1.0f biar gak aneh)
+            // 2. SCALING & SORTING
             float clampedProgress = Mathf.Min(progress, 1.0f);
             float currentScale = Mathf.Lerp(startScale, endScale, clampedProgress);
             transform.localScale = Vector3.one * currentScale;
@@ -71,29 +67,40 @@ public class FallingItem : MonoBehaviour
                 sr.sortingOrder = (int)currentOrder;
             }
 
-            // 3. LOGIKA COLLIDER (PENTING!)
+            // 3. LOGIKA JATUH / MISS (PENTING BUAT RESET COMBO!)
             if (progress > 1.0f && !hasMissed)
             {
-                // SUDAH LEWAT TARGET! Matikan collider.
-                hasMissed = true;
+                hasMissed = true; // Tandai sudah lewat
                 isCatchable = false;
                 if (col != null) col.enabled = false;
+
+                // --- FITUR BARU: RESET COMBO JIKA BUAH JATUH ---
+                // Cek: Ini Buah (poin positif) atau Bom?
+                // Kita cuma reset kalau yang jatuh adalah BUAH yang harusnya ditangkap.
+                if (funValueAmount > 0)
+                {
+                    if (GameManager.instance != null)
+                    {
+                        GameManager.instance.ResetCombo();
+                        Debug.Log("Combo Putus! Buah Jatuh ke Tanah.");
+                    }
+                }
+                // -----------------------------------------------
             }
             else if (progress > 0.8f && progress <= 1.0f && !isCatchable)
             {
-                // Jendela waktu untuk menangkap (80% - 100%)
+                // Jendela waktu menangkap (80% - 100%)
                 isCatchable = true;
                 if (col != null) col.enabled = true;
             }
         }
         else
         {
-            // Sudah jatuh jauh ke bawah, hancurkan.
+            // Sudah jauh di bawah, hancurkan
             Destroy(gameObject);
         }
     }
 
-    // Visualisasi Debugging (Optional)
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

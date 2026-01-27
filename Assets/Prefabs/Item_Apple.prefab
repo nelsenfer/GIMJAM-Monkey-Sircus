@@ -145,4 +145,4 @@ MonoBehaviour:
   fallDuration: 2
   startScale: 2
   endScale: 0.5
-  funValueAmount: 1
+  funValueAmount: 10

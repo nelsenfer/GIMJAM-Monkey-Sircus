@@ -7,21 +7,24 @@ public class StackManager : MonoBehaviour
     public Transform basketHolder;
 
     [Header("Settings")]
-    public float headYOffset = 2.5f; // Tinggi start tumpukan (di atas kepala)
-    public float maxStackY = 8.0f;   // Batas langit-langit
+    public float headYOffset = 2.5f;
+    public float maxStackY = 8.0f;
 
     [Header("Spacing Settings")]
-    public float normalSpacing = 0.5f; // Jarak normal antar buah
+    public float normalSpacing = 0.5f;
 
-    // Variabel pressedSpacing & maxFreshStack DIHAPUS karena kita pakai sistem rata
+    // --- TAMBAHAN BARU (Biar bisa disetting di Inspector) ---
+    [Header("Settings - Splash 🌊")]
+    public int splashLimit = 10;
+    // --------------------------------------------------------
 
     [Header("🎭 Physics Sway (Inersia)")]
-    [Range(0f, 0.5f)] public float swayMultiplier = 0.15f;
+    // UPDATE NILAI DEFAULT SESUAI GAMBAR TERAKHIR
+    [Range(0f, 0.5f)] public float swayMultiplier = 0.015f; // Ganti dari 0.15 jadi 0.015
     public float swaySmoothness = 5f;
-    public float maxSwayOffset = 1.0f;
+    public float maxSwayOffset = 4.0f; // Ganti dari 1.0 jadi 4.0
 
     private List<Transform> stackedItems = new List<Transform>();
-
     private float lastXPosition;
     private float currentSwayValue;
 
@@ -38,7 +41,7 @@ public class StackManager : MonoBehaviour
 
     public void AddToStack(GameObject fruit)
     {
-        // Bersihkan komponen fisik
+        // 1. Matikan physics
         Destroy(fruit.GetComponent<Rigidbody2D>());
         Destroy(fruit.GetComponent<Collider2D>());
         Destroy(fruit.GetComponent<FallingItem>());
@@ -47,8 +50,40 @@ public class StackManager : MonoBehaviour
         stackedItems.Add(fruitTransform);
         fruitTransform.SetParent(transform);
 
-        // Update visual sekalian
+        // 2. Update visual
         UpdateStackY();
+
+        // --- UPDATE: PAKAI VARIABEL SPLASH LIMIT ---
+        // Dulu: if (stackedItems.Count >= 10)
+        // Sekarang: Pakai variabel biar fleksibel
+        if (stackedItems.Count >= splashLimit)
+        {
+            TriggerSplashEvent();
+        }
+    }
+
+    void TriggerSplashEvent()
+    {
+        // A. Panggil Efek Teks di GameManager
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.TriggerSplashEffect();
+        }
+
+        // B. Hapus Semua Buah
+        for (int i = stackedItems.Count - 1; i >= 0; i--)
+        {
+            if (stackedItems[i] != null)
+            {
+                Destroy(stackedItems[i].gameObject);
+            }
+        }
+
+        // C. Reset List
+        stackedItems.Clear();
+        UpdateStackY();
+
+        Debug.Log("🌊 SPLASH TRIGGERED! Tumpukan Bersih!");
     }
 
     public void RemoveTopItems(int amount)
@@ -87,63 +122,47 @@ public class StackManager : MonoBehaviour
     void UpdateStackY()
     {
         int totalCount = stackedItems.Count;
-        if (totalCount == 0) return;
+        if (totalCount == 0)
+        {
+            // Reset posisi keranjang kalau kosong
+            if (basketHolder != null)
+            {
+                basketHolder.localPosition = new Vector3(0, headYOffset, 0);
+            }
+            return;
+        }
 
-        // --- LOGIKA BARU: KOMPRESI RATA (UNIFORM) ---
-
-        // 1. Hitung ruang yang tersedia dari kepala sampai langit-langit
         float totalAvailableHeight = maxStackY - headYOffset;
-
-        // 2. Hitung kalau pakai jarak normal butuh berapa meter?
         float requiredHeight = totalCount * normalSpacing;
-
-        // 3. Tentukan Jarak (Spacing) Final
         float currentSpacing = normalSpacing;
 
-        // Kalau ternyata butuh ruang lebih besar dari yang tersedia...
         if (requiredHeight > totalAvailableHeight)
         {
-            // ...maka kita bagi rata ruang yang ada untuk SEMUA item
-            // Hasilnya: Semua item akan mengecil jaraknya barengan
             currentSpacing = totalAvailableHeight / totalCount;
-
-            // Jaga-jaga biar gak terlalu gepeng (negatif/nol)
             currentSpacing = Mathf.Max(0.05f, currentSpacing);
         }
 
-        // --- PENERAPAN POSISI ---
         float currentLocalY = headYOffset;
 
         for (int i = 0; i < totalCount; i++)
         {
             Transform item = stackedItems[i];
 
-            // Posisi Y
             float yPos = currentLocalY;
-
-            // Posisi X (Miring/Sway)
             float xOffset = i * currentSwayValue;
 
             item.localPosition = new Vector3(xOffset, yPos, 0);
 
-            // Sorting
             SpriteRenderer sr = item.GetComponent<SpriteRenderer>();
             if (sr != null) sr.sortingOrder = 10 + i;
 
-            // Tambahkan jarak (Spacingnya sudah sama rata untuk semua item)
             currentLocalY += currentSpacing;
         }
 
-        // --- UPDATE KERANJANG ---
         if (basketHolder != null)
         {
             float basketX = totalCount * currentSwayValue;
-            // Keranjang menempel di item paling atas
-            float basketY = currentLocalY;
-
-            // Safety: Pastikan gak visualnya bablas
-            basketY = Mathf.Min(basketY, maxStackY + 0.5f);
-
+            float basketY = Mathf.Min(currentLocalY, maxStackY + 0.5f);
             basketHolder.localPosition = new Vector3(basketX, basketY, 0);
         }
     }

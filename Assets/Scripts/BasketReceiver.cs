@@ -4,13 +4,9 @@ public class BasketReceiver : MonoBehaviour
 {
     [Header("Visual Effects")]
     public ParticleSystem catchEffect;
-
     private StackManager stackManager;
 
-    void Start()
-    {
-        stackManager = GetComponentInParent<StackManager>();
-    }
+    void Start() { stackManager = GetComponentInParent<StackManager>(); }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -20,37 +16,24 @@ public class BasketReceiver : MonoBehaviour
 
             if (itemData != null)
             {
-                // A. ITEM BAGUS (Buah)
+                // A. ITEM BAGUS
                 if (itemData.funValueAmount > 0)
                 {
-                    // Update Skor
                     if (GameManager.instance != null)
                     {
-                        GameManager.instance.AddFun(itemData.funValueAmount);
+                        // CUKUP PANGGIL INI SAJA
+                        // GameManager akan: Hitung Skor x1 -> Tampilkan UI x1 -> Naikkan Index ke x2
+                        GameManager.instance.AddFun(itemData.funValueAmount, transform.position);
                     }
 
-                    // Tumpuk Item
-                    if (stackManager != null)
-                    {
-                        stackManager.AddToStack(other.gameObject);
-                    }
-
+                    if (stackManager != null) stackManager.AddToStack(other.gameObject);
                     if (catchEffect != null) catchEffect.Play();
                 }
-                // B. BOM (Item Jahat)
+                // B. BOM
                 else
                 {
-                    // 1. Hancurkan Object Bom
                     Destroy(other.gameObject);
-
-                    // 2. KURANGI NYAWA ❤️
-                    if (GameManager.instance != null)
-                    {
-                        GameManager.instance.ReduceLife();
-                    }
-
-                    // (Opsional) Efek ledakan visual bisa ditaruh sini nanti
-                    Debug.Log("DUAR! Bom Meledak! Nyawa berkurang.");
+                    if (GameManager.instance != null) GameManager.instance.ReduceLife();
                 }
             }
         }
