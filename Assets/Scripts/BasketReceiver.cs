@@ -2,39 +2,27 @@ using UnityEngine;
 
 public class BasketReceiver : MonoBehaviour
 {
-    [Header("Visual Effects")]
-    public ParticleSystem catchEffect;
     private StackManager stackManager;
 
-    void Start() { stackManager = GetComponentInParent<StackManager>(); }
+    void Start()
+    {
+        // Cari StackManager otomatis
+        stackManager = FindAnyObjectByType<StackManager>();
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Item"))
+        // Cek apakah yang masuk adalah Item Jatuh
+        FallingItem item = other.GetComponent<FallingItem>();
+
+        if (item != null)
         {
-            FallingItem itemData = other.GetComponent<FallingItem>();
+            // JANGAN PANGGIL GAMEMANAGER DI SINI! (Nanti double score)
+            // Cukup oper ke StackManager, biar dia yang urus semuanya.
 
-            if (itemData != null)
+            if (stackManager != null)
             {
-                // A. ITEM BAGUS
-                if (itemData.funValueAmount > 0)
-                {
-                    if (GameManager.instance != null)
-                    {
-                        // CUKUP PANGGIL INI SAJA
-                        // GameManager akan: Hitung Skor x1 -> Tampilkan UI x1 -> Naikkan Index ke x2
-                        GameManager.instance.AddFun(itemData.funValueAmount, transform.position);
-                    }
-
-                    if (stackManager != null) stackManager.AddToStack(other.gameObject);
-                    if (catchEffect != null) catchEffect.Play();
-                }
-                // B. BOM
-                else
-                {
-                    Destroy(other.gameObject);
-                    if (GameManager.instance != null) GameManager.instance.ReduceLife();
-                }
+                stackManager.AddToStack(other.gameObject);
             }
         }
     }

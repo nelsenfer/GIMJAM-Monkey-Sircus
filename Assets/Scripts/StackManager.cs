@@ -13,16 +13,13 @@ public class StackManager : MonoBehaviour
     [Header("Spacing Settings")]
     public float normalSpacing = 0.5f;
 
-    // --- TAMBAHAN BARU (Biar bisa disetting di Inspector) ---
     [Header("Settings - Splash 🌊")]
     public int splashLimit = 10;
-    // --------------------------------------------------------
 
     [Header("🎭 Physics Sway (Inersia)")]
-    // UPDATE NILAI DEFAULT SESUAI GAMBAR TERAKHIR
-    [Range(0f, 0.5f)] public float swayMultiplier = 0.015f; // Ganti dari 0.15 jadi 0.015
+    [Range(0f, 0.5f)] public float swayMultiplier = 0.015f;
     public float swaySmoothness = 5f;
-    public float maxSwayOffset = 4.0f; // Ganti dari 1.0 jadi 4.0
+    public float maxSwayOffset = 4.0f;
 
     private List<Transform> stackedItems = new List<Transform>();
     private float lastXPosition;
@@ -39,30 +36,76 @@ public class StackManager : MonoBehaviour
         return transform.position.y + headYOffset;
     }
 
+    // --- FUNGSI UTAMA ---
     public void AddToStack(GameObject fruit)
     {
-
-        Destroy(fruit.GetComponent<Rigidbody2D>());
-        Destroy(fruit.GetComponent<Collider2D>());
-
+        // 1. AMBIL SCRIPT DULUAN (Buat ngecek KTP: Ini Buah atau Bom?)
         FallingItem itemScript = fruit.GetComponent<FallingItem>();
-        if (itemScript != null)
+
+        if (itemScript == null) return; // Safety check
+
+        // 2. PERCABANGAN LOGIKA
+        if (itemScript.funValueAmount > 0)
         {
+            // ==========================================
+            // ✅ SKENARIO A: BUAH (DITUMPUK)
+            // ==========================================
+
+            // A. Matikan Fisika biar nempel
+            Destroy(fruit.GetComponent<Rigidbody2D>());
+            Destroy(fruit.GetComponent<Collider2D>());
             itemScript.enabled = false;
+
+            // B. Masukkan ke List Visual Stack
+            Transform fruitTransform = fruit.transform;
+            Vector3 capturePosition = fruitTransform.position; // Simpan posisi buat popup skor
+
+            stackedItems.Add(fruitTransform);
+            fruitTransform.SetParent(transform);
+
+            // C. Rapikan Tumpukan
+            UpdateStackY();
+
+            // D. Cek Splash (Penuh)
+            if (stackedItems.Count >= splashLimit)
+            {
+                TriggerSplashEvent();
+            }
+
+            // E. Animasi & Skor
+            PlayerController player = GetComponent<PlayerController>();
+            if (player != null)
+            {
+                player.PlayHappyAnim();
+                if (GameManager.instance != null)
+                {
+                    GameManager.instance.AddScore(itemScript.funValueAmount, capturePosition);
+                }
+            }
         }
-
-        Transform fruitTransform = fruit.transform;
-        stackedItems.Add(fruitTransform);
-        fruitTransform.SetParent(transform);
-
-        UpdateStackY();
-
-        if (stackedItems.Count >= splashLimit)
+        else
         {
-            TriggerSplashEvent();
+            // ==========================================
+            // 💣 SKENARIO B: BOM (LANGSUNG HANCUR)
+            // ==========================================
+
+            // A. Mainkan Animasi Sakit
+            PlayerController player = GetComponent<PlayerController>();
+            if (player != null) player.PlayHurtAnim();
+
+            // B. Kurangi Nyawa Player
+            if (GameManager.instance != null)
+            {
+                GameManager.instance.ReduceLives();
+            }
+
+            // C. HANCURKAN BOM-NYA (PENTING!)
+            // Jangan dimasukkan ke stackedItems, langsung destroy aja biar hilang dari layar.
+            Destroy(fruit);
         }
     }
 
+    // --- FUNGSI SPLASH (SIBLING) ---
     void TriggerSplashEvent()
     {
         // A. Panggil Efek Teks di GameManager
@@ -136,10 +179,9 @@ public class StackManager : MonoBehaviour
             Transform item = stackedItems[i];
             SpriteRenderer sr = item.GetComponent<SpriteRenderer>();
 
-            // 1. AMBIL DATA DARI INSPECTOR
             FallingItem itemScript = item.GetComponent<FallingItem>();
-            float myVisualOffset = 0f;     // Geser diri sendiri
-            float myHeightReduction = 0f;  // Tarik item atas
+            float myVisualOffset = 0f;
+            float myHeightReduction = 0f;
 
             if (itemScript != null)
             {
@@ -147,28 +189,20 @@ public class StackManager : MonoBehaviour
                 myHeightReduction = itemScript.heightReduction;
             }
 
-            // 2. UKUR TINGGI ASLI
             float spriteHeight = 0.5f;
             if (sr != null) spriteHeight = sr.bounds.size.y;
 
-            // 3. TENTUKAN POSISI DIRI SENDIRI (Dipengaruhi Visual Offset)
-            // Logic: Lantai + Setengah Tinggi + Koreksi Posisi Manual
             float halfHeight = spriteHeight / 2f;
             float yPos = currentLocalY + halfHeight + myVisualOffset;
 
-            // 4. SET POSISI
             float xOffset = i * currentSwayValue;
             item.localPosition = new Vector3(xOffset, yPos, 0);
 
-            // 5. SORTING ORDER
             if (sr != null) sr.sortingOrder = 10 + i;
 
-            // 6. SIAPKAN LANTAI UNTUK ITEM SELANJUTNYA (Dipengaruhi Height Reduction)
-            // Logic: Lantai Naik setinggi gambar, tapi dikurangi 'Height Reduction' biar item atas turun
             currentLocalY += spriteHeight - 0.1f - myHeightReduction;
         }
 
-        // Update Keranjang
         if (basketHolder != null)
         {
             float basketX = totalCount * currentSwayValue;

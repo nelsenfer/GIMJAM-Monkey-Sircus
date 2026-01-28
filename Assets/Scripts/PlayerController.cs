@@ -55,4 +55,24 @@ public class PlayerController : MonoBehaviour
             jumpRequest = false;
         }
     }
+
+
+    public void PlayHappyAnim()
+    {
+        if (anim != null)
+        {
+            // Pastikan kamu sudah bikin parameter "TriggerHappy" di Animator window
+            anim.SetTrigger("TriggerHappy");
+        }
+    }
+
+    // Dipanggil saat kena Bom (via StackManager/GameManager)
+    public void PlayHurtAnim()
+    {
+        if (anim != null)
+        {
+            // Pastikan kamu sudah bikin parameter "TriggerHurt" di Animator window
+            anim.SetTrigger("TriggerHurt");
+        }
+    }
 }

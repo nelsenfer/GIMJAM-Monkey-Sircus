@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement; // Added for restarting the game
 
 public class GameManager : MonoBehaviour
 {
@@ -9,13 +10,14 @@ public class GameManager : MonoBehaviour
 
     [Header("Settings - Effects ✨")]
     public ParticleSystem confettiPrefab;
-    public float confettiXOffset = 8.0f; // Jarak dari tengah ke samping (Kiri/Kanan)
-    public float confettiYOffset = -4.0f; // Tinggi posisi spawn (di bawah layar)
+    public float confettiXOffset = 8.0f;
+    public float confettiYOffset = -4.0f;
 
     [Header("Settings - Fun Meter")]
     public Slider funBarSlider;
     public float maxFun = 5000f;
     public float currentFun = 0f;
+    public int score = 0; // Added Score variable
 
     [Header("Settings - Score Popup ✨")]
     public TextMeshProUGUI scorePopupText;
@@ -38,70 +40,137 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
     }
 
     void Start()
     {
-        if (funBarSlider != null) { funBarSlider.maxValue = maxFun; funBarSlider.value = currentFun; }
+        // Setup Fun Bar
+        if (funBarSlider != null)
+        {
+            funBarSlider.maxValue = maxFun;
+            funBarSlider.value = currentFun;
+        }
 
+        // Setup Lives
         currentLives = maxLives;
         UpdateHeartUI();
 
-        // --- UBAHAN 1: Matikan Teks Combo saat awal ---
+        // Hide UI elements initially
         if (comboText != null) comboText.gameObject.SetActive(false);
-        // ----------------------------------------------
-
         if (splashText != null) splashText.SetActive(false);
         if (scorePopupText != null) scorePopupText.gameObject.SetActive(false);
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
     }
 
-    // --- UBAHAN 2: Fungsi AddCombo dihapus/digabung ke AddFun biar rapi ---
-    // (Kita tidak butuh AddCombo terpisah lagi karena otomatisasi di bawah)
+    // --- COMBO & SCORE SYSTEM ---
 
     public void ResetCombo()
     {
         comboIndex = 0;
-        // Kalau reset, sembunyikan lagi teksnya biar bersih
         if (comboText != null) comboText.gameObject.SetActive(false);
     }
 
-    public void AddFun(float baseAmount, Vector3 capturePos)
+    // Called by StackManager when catching Fruit
+    public void AddScore(int baseAmount, Vector3 capturePos)
     {
         if (baseAmount > 0)
         {
-            // 1. AMBIL MULTIPLIER SAAT INI (Sebelum dinaikkan)
+            // 1. Calculate Multiplier
             int currentMult = 1;
             if (comboMultipliers != null && comboMultipliers.Length > 0)
                 currentMult = comboMultipliers[comboIndex];
 
-            // 2. HITUNG SKOR
-            float finalScore = baseAmount * currentMult;
+            // 2. Calculate Final Score
+            int finalScore = baseAmount * currentMult;
+            score += finalScore;
 
-            // 3. TAMPILKAN UI COMBO (Sesuai yang dipakai barusan)
+            // 3. Update Combo UI
             if (comboText != null)
             {
                 comboText.text = "x" + currentMult;
-                comboText.gameObject.SetActive(true); // Nyalakan Teks!
+                comboText.gameObject.SetActive(true);
 
-                // Warnai merah kalau sudah mentok max
                 if (comboIndex >= comboMultipliers.Length - 1)
-                    comboText.color = Color.red;
+                    comboText.color = Color.red; // Max combo color
                 else
                     comboText.color = Color.white;
             }
 
-            // 4. POPUP & BAR
-            TriggerScorePopup(finalScore, capturePos);
+            // 4. Update Fun Bar & Popup
             currentFun += finalScore;
             currentFun = Mathf.Clamp(currentFun, 0, maxFun);
             if (funBarSlider != null) funBarSlider.value = currentFun;
 
-            // 5. NAIKKAN LEVEL UNTUK BOLA BERIKUTNYA (Diam-diam)
+            TriggerScorePopup(finalScore, capturePos);
+
+            // 5. Increase Combo Level for Next Item
             if (comboMultipliers != null && comboIndex < comboMultipliers.Length - 1)
             {
                 comboIndex++;
             }
+        }
+    }
+
+    // --- LIFE SYSTEM (Called by StackManager when catching Bomb) ---
+
+    public void ReduceLives()
+    {
+        ResetCombo(); // Reset combo if hit by bomb
+        currentLives--;
+        UpdateHeartUI();
+
+        Debug.Log("ouch! Lives left: " + currentLives);
+
+        if (currentLives <= 0)
+        {
+            TriggerGameOver();
+        }
+    }
+
+    void UpdateHeartUI()
+    {
+        if (heartIcons == null) return;
+        for (int i = 0; i < heartIcons.Length; i++)
+        {
+            // Enable heart if index is less than current lives
+            heartIcons[i].enabled = (i < currentLives);
+        }
+    }
+
+    // --- VISUAL EFFECTS ---
+
+    public void TriggerSplashEffect()
+    {
+        StartCoroutine(ShowSplashTextRoutine());
+    }
+
+    IEnumerator ShowSplashTextRoutine()
+    {
+        if (splashText != null)
+        {
+            splashText.SetActive(true);
+
+            if (confettiPrefab != null)
+            {
+                // Left Cannon
+                Vector3 leftPos = new Vector3(-confettiXOffset, confettiYOffset, 0);
+                Quaternion leftRot = Quaternion.Euler(0, 0, -60);
+                ParticleSystem leftConfetti = Instantiate(confettiPrefab, leftPos, leftRot);
+                leftConfetti.Play();
+                Destroy(leftConfetti.gameObject, 3.0f);
+
+                // Right Cannon
+                Vector3 rightPos = new Vector3(confettiXOffset, confettiYOffset, 0);
+                Quaternion rightRot = Quaternion.Euler(0, 0, 60);
+                ParticleSystem rightConfetti = Instantiate(confettiPrefab, rightPos, rightRot);
+                rightConfetti.Play();
+                Destroy(rightConfetti.gameObject, 3.0f);
+            }
+
+            yield return new WaitForSeconds(0.8f);
+            splashText.SetActive(false);
         }
     }
 
@@ -115,8 +184,10 @@ public class GameManager : MonoBehaviour
     {
         if (scorePopupText != null)
         {
+            // Convert World Position to Screen Position for UI
             Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
-            screenPos.y += 50f;
+            screenPos.y += 50f; // Offset slightly above character
+
             scorePopupText.transform.position = screenPos;
             scorePopupText.text = "+ " + amount.ToString("F0");
             scorePopupText.gameObject.SetActive(true);
@@ -129,72 +200,31 @@ public class GameManager : MonoBehaviour
             {
                 timer += Time.deltaTime;
                 float progress = timer / popupDuration;
+
+                // Floating Up Effect
                 scorePopupText.transform.position = startPos + new Vector3(0, floatSpeed * timer, 0);
+                // Fading Out Effect
                 scorePopupText.alpha = Mathf.Lerp(1f, 0f, progress);
+
                 yield return null;
             }
             scorePopupText.gameObject.SetActive(false);
         }
     }
 
-    public void ReduceLife()
-    {
-        ResetCombo();
-        currentLives--;
-        UpdateHeartUI();
-        if (currentLives <= 0) TriggerGameOver();
-    }
+    // --- GAME OVER LOGIC ---
 
-    public void TriggerSplashEffect()
-    {
-        StartCoroutine(ShowSplashTextRoutine());
-    }
-
-    IEnumerator ShowSplashTextRoutine()
-    {
-        if (splashText != null)
-        {
-            // 1. Munculin Teks
-            splashText.SetActive(true);
-
-            // 2. Munculin Confetti (KIRI & KANAN)
-            if (confettiPrefab != null)
-            {
-                // --- KIRI (Left Cannon) ---
-                // Posisi: X negatif (kiri), Y di bawah
-                Vector3 leftPos = new Vector3(-confettiXOffset, confettiYOffset, 0);
-                // Rotasi: Miring ke kanan (-60 derajat) biar nembak ke tengah
-                Quaternion leftRot = Quaternion.Euler(0, 0, -60);
-
-                ParticleSystem leftConfetti = Instantiate(confettiPrefab, leftPos, leftRot);
-                leftConfetti.Play();
-                Destroy(leftConfetti.gameObject, 3.0f); // Hapus setelah 3 detik
-
-                // --- KANAN (Right Cannon) ---
-                // Posisi: X positif (kanan), Y di bawah
-                Vector3 rightPos = new Vector3(confettiXOffset, confettiYOffset, 0);
-                // Rotasi: Miring ke kiri (60 derajat) biar nembak ke tengah
-                Quaternion rightRot = Quaternion.Euler(0, 0, 60);
-
-                ParticleSystem rightConfetti = Instantiate(confettiPrefab, rightPos, rightRot);
-                rightConfetti.Play();
-                Destroy(rightConfetti.gameObject, 3.0f);
-            }
-
-            // Tunggu teks tampil sebentar
-            yield return new WaitForSeconds(0.8f);
-            splashText.SetActive(false);
-        }
-    }
-
-    void UpdateHeartUI()
-    {
-        if (heartIcons == null) return;
-        for (int i = 0; i < heartIcons.Length; i++) heartIcons[i].enabled = (i < currentLives);
-    }
     void TriggerGameOver()
     {
-        Time.timeScale = 0;
+        Debug.Log("💀 GAME OVER");
+        Time.timeScale = 0; // Pause Game
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
+    }
+
+    // Can be called by a Button in Unity UI
+    public void RestartGame()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

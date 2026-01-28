@@ -1,104 +1,271 @@
+using System.Collections;
 using UnityEngine;
 
 public class ItemSpawner : MonoBehaviour
 {
-    [Header("Settings")]
-    public GameObject[] fruitPrefabs; // Array Buah Bagus
-    public GameObject[] bombPrefabs;  // Array Bom (Bisa banyak variasi)
+    [Header("---- PREFABS ----")]
+    public GameObject[] fruitPrefabs;
+    public GameObject[] bombPrefabs;
 
-    [Header("🎯 Auto-Spawn Area (PENTING)")]
-    [Tooltip("Tarik object Tali/Ground yang punya BoxCollider2D ke sini")]
+    [Header("---- AREA & POSISI ----")]
     public Collider2D groundCollider;
-    [Tooltip("Jarak aman dari ujung tali (biar buah gak jatuh pas di tebing)")]
     public float padding = 0.5f;
-
-    [Header("Spawn Settings")]
     public float startHeight = 6.0f;
-    public float spawnInterval = 2.0f;
 
-    [Header("Difficulty")]
-    [Range(0f, 1f)] public float bombChance = 0.1f;
+    [Header("---- 🍎 FRUIT SETTINGS ----")]
+    public float fruitSpawnInterval = 1.0f;
 
-    private float timer;
+    [Header("---- 💣 BOMB SETTINGS (Normal) ----")]
+    public float minBombInterval = 4.0f;
+    public float maxBombInterval = 8.0f;
+
+    [Header("---- 🔥 CHAOS MODE SETTINGS 🔥 ----")]
+    public float triggerTime = 60f;
+    public int triggerScore = 2000;
+
+    [Tooltip("Durasi Pure Chaos (Hujan Bom)")]
+    public float chaosDuration = 5.0f; // Diubah jadi 5 Detik sesuai request
+    public float chaosCooldown = 15f;
+    public float chaosBombInterval = 0.5f; // Kecepatan bom pas Pure Chaos
+
+    // Internal State
+    private float fruitTimer;
+    private float bombTimer;
+
+    private float gameTimeElapsed;
+    private bool isAttacking = false; // KUNCI: Kalau true, Buah & Bom Normal berhenti total
+    private bool canTriggerChaos = true;
+
     private StackManager playerStack;
 
     void Start()
     {
         playerStack = FindAnyObjectByType<StackManager>();
+        fruitTimer = fruitSpawnInterval;
+        bombTimer = Random.Range(minBombInterval, maxBombInterval);
 
-        if (groundCollider == null)
-        {
-            Debug.LogError("⚠️ LUPA MASUKIN COLLIDER TALI di ItemSpawner!");
-        }
+        if (groundCollider == null) Debug.LogError("⚠️ HEH! Masukin Collider Tali dulu!");
     }
 
     void Update()
     {
-        timer -= Time.deltaTime;
+        gameTimeElapsed += Time.deltaTime;
 
-        if (timer <= 0)
+        // 1. CEK TRIGGER CHAOS
+        if (!isAttacking && canTriggerChaos)
         {
-            SpawnItem();
-            timer = spawnInterval;
+            CheckChaosTrigger();
+        }
+
+        // 2. LOGIKA SPAWN NORMAL (Hanya jalan kalau TIDAK sedang Chaos/Attack)
+        // Ini menjawab request: "Spawn buah berhenti biar player fokus"
+        if (!isAttacking)
+        {
+            bool spawnedSomething = false;
+
+            // --- JANTUNG 1: BUAH ---
+            fruitTimer -= Time.deltaTime;
+            if (fruitTimer <= 0)
+            {
+                SpawnSingleItem(false);
+                fruitTimer = fruitSpawnInterval;
+                spawnedSomething = true;
+            }
+
+            // --- JANTUNG 2: BOM ---
+            HandleBombSpawn(spawnedSomething);
         }
     }
 
-    void SpawnItem()
+    void CheckChaosTrigger()
     {
-        // 1. HITUNG POSISI BERDASARKAN TALI
-        float spawnX = 0;
+        int currentScore = 0;
+        if (GameManager.instance != null) currentScore = GameManager.instance.score;
 
-        if (groundCollider != null)
+        if (gameTimeElapsed > triggerTime || currentScore >= triggerScore)
         {
-            float minX = groundCollider.bounds.min.x + padding;
-            float maxX = groundCollider.bounds.max.x - padding;
-            spawnX = Random.Range(minX, maxX);
+            StartCoroutine(ChaosModeRoutine());
+        }
+    }
+
+    // --- LOGIKA UTAMA WAVE ---
+    IEnumerator ChaosModeRoutine()
+    {
+        isAttacking = true; // 🛑 STOP SPAWN BUAH & BOM NORMAL
+        canTriggerChaos = false;
+
+        Debug.Log("💀 CHAOS MODE TRIGGERED! (Player Fokus Menghindar)");
+
+        // Peringatan Singkat
+        yield return new WaitForSeconds(0.5f);
+
+        // ACAK JENIS SERANGAN
+        int chaosType = Random.Range(0, 3);
+
+        if (chaosType == 0)
+        {
+            Debug.Log("🎲 Event: TRIPLE THREAT!");
+            yield return StartCoroutine(Attack_TripleThreat());
+        }
+        else if (chaosType == 1)
+        {
+            Debug.Log("🎲 Event: RAIN WAVE!");
+            yield return StartCoroutine(Attack_RainWave());
         }
         else
         {
-            spawnX = Random.Range(-2.5f, 2.5f);
+            Debug.Log("🎲 Event: PURE CHAOS (5 Detik)");
+            yield return StartCoroutine(Attack_PureChaos());
         }
 
-        Vector3 spawnPos = new Vector3(spawnX, startHeight, 0);
+        // --- FASE SELESAI ---
+        Debug.Log("😌 CHAOS OVER. Bonus Fruit & Resume.");
 
-        // 2. PILIH ITEM (LOGIKA BARU DI SINI)
-        GameObject prefabToSpawn = null; // Siapkan wadah kosong
+        // 1. KASIH HADIAH (BONUS BUAH)
+        SpawnSingleItem(false);
 
-        // Cek: Apakah Buah ada isinya?
-        if (fruitPrefabs.Length > 0)
+        // 2. PERBAIKAN DI SINI (PENTING!) 🛠️
+        // Reset timer buah agar tidak "dobel spawn" di frame berikutnya.
+        // Jadi player dapat 1 buah bonus, lalu nunggu 1 detik lagi buat buah berikutnya.
+        fruitTimer = fruitSpawnInterval;
+
+        // Kembalikan ke Mode Normal
+        isAttacking = false;
+
+        // Cooldown sebelum bisa Chaos lagi
+        yield return new WaitForSeconds(chaosCooldown);
+        canTriggerChaos = true;
+    }
+
+    // --- LOGIKA BOM NORMAL ---
+    void HandleBombSpawn(bool isBusy)
+    {
+        bombTimer -= Time.deltaTime;
+
+        if (bombTimer <= 0)
         {
-            // Roll Dadu: Apakah spawn Bom? DAN Apakah kita punya daftar Bom?
-            if (Random.value < bombChance && bombPrefabs.Length > 0)
+            if (isBusy)
             {
-                // --- PILIH BOM ACAK DARI ARRAY ---
-                int randomIndex = Random.Range(0, bombPrefabs.Length);
-                prefabToSpawn = bombPrefabs[randomIndex];
+                bombTimer = 0.3f; // Ngalah sama buah
             }
             else
             {
-                // --- PILIH BUAH BAGUS ACAK ---
-                int randomIndex = Random.Range(0, fruitPrefabs.Length);
-                prefabToSpawn = fruitPrefabs[randomIndex];
+                SpawnSingleItem(true);
+                // Random Interval Normal
+                bombTimer = Random.Range(minBombInterval, maxBombInterval);
             }
+        }
+    }
 
-            // 3. SPAWN (Hanya jika prefabToSpawn ada isinya)
-            if (prefabToSpawn != null)
-            {
-                GameObject newItem = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+    // ================================================================
+    // ⚔️ JURUS-JURUS SPESIAL ⚔️
+    // ================================================================
 
-                // 4. SET TARGET
-                FallingItem itemScript = newItem.GetComponent<FallingItem>();
-                if (itemScript != null)
-                {
-                    float targetY = -3f;
-                    if (playerStack != null)
-                    {
-                        targetY = playerStack.GetCurrentHeight();
-                    }
-                    itemScript.targetHeight = targetY;
-                    itemScript.startHeight = startHeight;
-                }
-            }
+    // JURUS 1: TRIPLE THREAT (Tanpa Delay Akhir)
+    IEnumerator Attack_TripleThreat()
+    {
+        float[] xPositions = GetLanePositions();
+
+        SpawnBombAt(xPositions[0]);
+        SpawnBombAt(xPositions[1]);
+        SpawnBombAt(xPositions[2]);
+
+        // Selesai Instan! Langsung lanjut ke Bonus Buah.
+        yield return null;
+    }
+
+    // JURUS 2: RAIN WAVE
+    IEnumerator Attack_RainWave()
+    {
+        float[] xPositions = GetLanePositions();
+        bool leftToRight = (Random.value > 0.5f);
+
+        if (leftToRight)
+        {
+            SpawnBombAt(xPositions[0]); yield return new WaitForSeconds(0.4f);
+            SpawnBombAt(xPositions[1]); yield return new WaitForSeconds(0.4f);
+            SpawnBombAt(xPositions[2]);
+        }
+        else
+        {
+            SpawnBombAt(xPositions[2]); yield return new WaitForSeconds(0.4f);
+            SpawnBombAt(xPositions[1]); yield return new WaitForSeconds(0.4f);
+            SpawnBombAt(xPositions[0]);
+        }
+    }
+
+    // JURUS 3: PURE CHAOS (Looping 5 Detik)
+    IEnumerator Attack_PureChaos()
+    {
+        float timer = chaosDuration; // 5 Detik
+
+        while (timer > 0)
+        {
+            SpawnSingleItem(true); // Spawn Bom Acak
+            yield return new WaitForSeconds(chaosBombInterval); // Tunggu interval cepat (0.5s)
+            timer -= chaosBombInterval;
+        }
+    }
+
+    // --- FUNGSI BANTUAN ---
+
+    float[] GetLanePositions()
+    {
+        float min = -2f, max = 2f;
+        if (groundCollider != null)
+        {
+            min = groundCollider.bounds.min.x + padding;
+            max = groundCollider.bounds.max.x - padding;
+        }
+        float width = max - min;
+        return new float[] { min + (width * 0.15f), min + (width * 0.5f), min + (width * 0.85f) };
+    }
+
+    void SpawnSingleItem(bool isBomb)
+    {
+        float spawnX = 0;
+        if (groundCollider != null)
+        {
+            spawnX = Random.Range(groundCollider.bounds.min.x + padding, groundCollider.bounds.max.x - padding);
+        }
+        else spawnX = Random.Range(-2.5f, 2.5f);
+
+        GameObject prefabToSpawn = null;
+
+        if (isBomb)
+        {
+            if (bombPrefabs.Length > 0)
+                prefabToSpawn = bombPrefabs[Random.Range(0, bombPrefabs.Length)];
+        }
+        else
+        {
+            if (fruitPrefabs.Length > 0)
+                prefabToSpawn = fruitPrefabs[Random.Range(0, fruitPrefabs.Length)];
+        }
+
+        if (prefabToSpawn != null) SpawnObject(prefabToSpawn, spawnX);
+    }
+
+    void SpawnBombAt(float xPos)
+    {
+        if (bombPrefabs.Length > 0)
+        {
+            GameObject bomb = bombPrefabs[Random.Range(0, bombPrefabs.Length)];
+            SpawnObject(bomb, xPos);
+        }
+    }
+
+    void SpawnObject(GameObject prefab, float xPos)
+    {
+        Vector3 pos = new Vector3(xPos, startHeight, 0);
+        GameObject newItem = Instantiate(prefab, pos, Quaternion.identity);
+
+        FallingItem itemScript = newItem.GetComponent<FallingItem>();
+        if (itemScript != null)
+        {
+            float targetY = (playerStack != null) ? playerStack.GetCurrentHeight() : -3f;
+            itemScript.targetHeight = targetY;
+            itemScript.startHeight = startHeight;
         }
     }
 
@@ -106,14 +273,10 @@ public class ItemSpawner : MonoBehaviour
     {
         if (groundCollider != null)
         {
-            Gizmos.color = Color.green;
-            float minX = groundCollider.bounds.min.x + padding;
-            float maxX = groundCollider.bounds.max.x - padding;
-            Vector3 lineStart = new Vector3(minX, startHeight, 0);
-            Vector3 lineEnd = new Vector3(maxX, startHeight, 0);
-            Gizmos.DrawLine(lineStart, lineEnd);
-            Gizmos.DrawWireSphere(lineStart, 0.2f);
-            Gizmos.DrawWireSphere(lineEnd, 0.2f);
+            Gizmos.color = Color.yellow;
+            Vector3 start = new Vector3(groundCollider.bounds.min.x + padding, startHeight, 0);
+            Vector3 end = new Vector3(groundCollider.bounds.max.x - padding, startHeight, 0);
+            Gizmos.DrawLine(start, end);
         }
     }
 }
