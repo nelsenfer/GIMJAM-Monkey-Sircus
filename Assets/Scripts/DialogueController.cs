@@ -1,6 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System.Collections;
 using TMPro;
+
 
 public class DialogueController : MonoBehaviour
 {
@@ -12,6 +16,7 @@ public class DialogueController : MonoBehaviour
         public string namaEkspresi;
     }
     [SerializeField] private BubbleChatController bubbleManager;
+    [SerializeField] private TiraiController tiraiManager;
 
     [Header("Referensi UI")]
     [SerializeField] private Image karakterImage;
@@ -19,6 +24,9 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialogText;
     [SerializeField] private Animator bubbleAnimator;
     [SerializeField] private Animator spriteAnimator;
+    [SerializeField] private Animator tiraiKiriAnimator;
+    [SerializeField] private Animator tiraiKananAnimator;
+
 
     [Header("Daftar Dialog")]
     [SerializeField] private DialogueLine[] daftarDialog;
@@ -32,10 +40,11 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private Sprite ekspresiSakit;
 
     private int indexSekarang = -1;
+    private static int tutorialSudahSelesai = 0;
 
     void Start()
     {
-        LanjutDialog();
+        StartCoroutine(MunculkanTiraiRoutine());
     }
 
     public void LanjutDialog()
@@ -48,7 +57,7 @@ public class DialogueController : MonoBehaviour
         {
             DialogueLine barisBaru = daftarDialog[indexSekarang];
 
-            
+
             if (indexSebelumnya == -1 || barisBaru.namaKarakter != daftarDialog[indexSebelumnya].namaKarakter)
             {
                 bubbleManager.TampilkanSemua();
@@ -62,6 +71,34 @@ public class DialogueController : MonoBehaviour
             bubbleManager.SembunyikanSemua();
             indexSekarang = -1;
             //Tutorial.Instance.tutorialSelesai();
+            StartCoroutine(MunculkanTiraiRoutine());
+        }
+    }
+
+    public IEnumerator MunculkanTiraiRoutine()
+    {
+        // 1. Tampilkan Tirai
+        tiraiManager.TampilkanTirai();
+        Debug.Log("Animasi sedang bermain...");
+
+        // 2. Tunggu selama durasi animasi (misal: 2 detik)
+        // Sesuaikan angka 2f dengan panjang animasi TiraiShow kamu
+        yield return new WaitForSeconds(3f);
+
+        // 5. Lanjut Dialog
+        if(Tutorial.sudahTutorial == 1)
+        {
+            Tutorial.Instance.tutorialSelesai();
+        }
+        if(tutorialSudahSelesai == 0)
+        {
+            
+            tiraiManager.SembunyikanTirai();
+            Debug.Log("Animasi selesai, sekarang bersembunyi");
+            yield return new WaitForSeconds(3f);
+            LanjutDialog();
+            tutorialSudahSelesai = 1;
+            Tutorial.Instance.simpanTutorial();
         }
     }
 

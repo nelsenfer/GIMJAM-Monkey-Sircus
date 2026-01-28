@@ -260,6 +260,11 @@ public class ItemSpawner : MonoBehaviour
         Vector3 pos = new Vector3(xPos, startHeight, 0);
         GameObject newItem = Instantiate(prefab, pos, Quaternion.identity);
 
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.lemparBuah);
+        }
+
         FallingItem itemScript = newItem.GetComponent<FallingItem>();
         if (itemScript != null)
         {

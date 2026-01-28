@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     public Image[] heartIcons;
 
     [Header("Settings - UI")]
+    public GameObject winPanel;
     public GameObject gameOverPanel;
     public GameObject splashText;
 
@@ -49,6 +50,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+
         if (funBarSlider != null)
         {
             funBarSlider.maxValue = maxFun;
@@ -118,6 +120,8 @@ public class GameManager : MonoBehaviour
                     comboText.color = Color.red;
                 else
                     comboText.color = Color.white;
+                float targetVolume = Mathf.Clamp((float)currentMult / 10f, 0.1f, 1f);
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.combo, targetVolume);
             }
 
             // 4. Update Fun Bar & Popup
@@ -131,6 +135,10 @@ public class GameManager : MonoBehaviour
             if (comboMultipliers != null && comboIndex < comboMultipliers.Length - 1)
             {
                 comboIndex++;
+            }
+            if (currentFun >= maxFun)
+            {
+                TriggerWin();
             }
         }
     }
@@ -165,6 +173,8 @@ public class GameManager : MonoBehaviour
     public void TriggerSplashEffect()
     {
         StartCoroutine(ShowSplashTextRoutine());
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.splash);
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.confetti, 1.5f);
     }
 
     IEnumerator ShowSplashTextRoutine()
@@ -227,17 +237,35 @@ public class GameManager : MonoBehaviour
     }
 
     // --- GAME OVER LOGIC ---
+    void TriggerWin()
+    {
+        // PERBAIKAN: Gunakan Time.timeScale untuk menghentikan waktu game
+        MenuScript.Instance.Pause();
+
+        if (winPanel != null) winPanel.SetActive(true); // Munculkan pilihan (Main Lagi / Menu)
+
+        if (ChangeUi.Instance != null)
+        {
+            ChangeUi.Instance.gameSelesai(); // Data tersimpan, tapi tetap di scene ini
+        }
+    }
 
     void TriggerGameOver()
     {
         Debug.Log("💀 GAME OVER");
-        Time.timeScale = 0;
+        MenuScript.Instance.Pause();
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
     }
 
     public void RestartGame()
     {
-        Time.timeScale = 1;
+        MenuScript.Instance.Resume();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void GiveUp()
+    {
+        MenuScript.Instance.Resume();
+        SceneManager.LoadScene("MainMenu");
     }
 }

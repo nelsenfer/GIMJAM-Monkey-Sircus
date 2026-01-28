@@ -254,7 +254,7 @@ MonoBehaviour:
   m_text: 1920 x 1080
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
-  m_sharedMaterial: {fileID: 8825382570769821974, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
+  m_sharedMaterial: {fileID: 2834160958607222945, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -365,8 +365,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -0.0000038147, y: 17}
+  m_SizeDelta: {x: 676.7844, y: 553.4781}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &133872490
 MonoBehaviour:
@@ -388,7 +388,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: "Nelsen Febri Handaka - Main Game Programmer\nMuhammad Ardyansayah Azhari
+    - Game Programmer\nI Putu Satwika Werdi Widagda Karang - Programmer \r\nRahmat
+    Fairuz Zuhry - Game Designer, Game Programmer \nMuhammad A'Un Akbar - Sound Designer\r\nKeyza
+    Anindira - Game Designer, 2D Artist Environment\r\nBerliana Hotmaria Sipahutar
+    - 2D Artist Enviroment\r\nNadia Kalila Ramadhani - 2D Artist Character\r\nNurlita
+    A'Yun Maulani - 2D Artist Cutscene\r\nCarissa Olivia Divina Anwar - 2D Artist
+    Character"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e20f859a02ac0fa45a729874d485ab45, type: 2}
   m_sharedMaterial: {fileID: -1164963539965972818, guid: e20f859a02ac0fa45a729874d485ab45, type: 2}
@@ -397,8 +403,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -415,20 +421,20 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 27
+  m_fontSizeBase: 27
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 40
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -454,7 +460,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -0.00061035156, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -931,6 +937,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 398958271}
   m_CullTransparentMesh: 1
+--- !u!1 &407781217
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 407781218}
+  m_Layer: 5
+  m_Name: warning
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &407781218
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407781217}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1353002484}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &411759505
 GameObject:
   m_ObjectHideFlags: 0
@@ -1017,8 +1058,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 735977573}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+      - m_Target: {fileID: 735977574}
+        m_TargetAssemblyTypeName: MenuScript, Assembly-CSharp
         m_MethodName: OptionsButton
         m_Mode: 1
         m_Arguments:
@@ -1622,6 +1663,7 @@ GameObject:
   - component: {fileID: 735977570}
   - component: {fileID: 735977569}
   - component: {fileID: 735977573}
+  - component: {fileID: 735977574}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1724,13 +1766,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f351a4f1b7388a46b598dfdae89c0ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SettingUi: {fileID: 1702610973}
   CreditUi: {fileID: 2133962502}
   ui: {fileID: 1353002485}
   gambarBaru: {fileID: -3935750235133729936, guid: 36e1c8beac197fd4ebe84da5f2e3bf03, type: 3}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   defaultColor: {r: 0, g: 0, b: 0, a: 1}
+--- !u!114 &735977574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735977568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74a39c15509d9004b89e903a0fd528f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SettingUi: {fileID: 1702610973}
   resolutionDropdown: {fileID: 1029125917}
+  normalSnapshot: {fileID: 6689266026993143857, guid: adaec1586cdd883499ff0ebdf1dd8656, type: 2}
+  pausedSnapshot: {fileID: 7277527256460107326, guid: adaec1586cdd883499ff0ebdf1dd8656, type: 2}
+  warning: {fileID: 407781217}
 --- !u!1 &739297419
 GameObject:
   m_ObjectHideFlags: 0
@@ -2268,10 +2325,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1291010508}
   m_HandleRect: {fileID: 1871795648}
   m_Direction: 0
-  m_MinValue: -60
-  m_MaxValue: 10
+  m_MinValue: 0.0001
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.0001
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -3192,7 +3249,7 @@ MonoBehaviour:
   m_text: P l a y
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
-  m_sharedMaterial: {fileID: 8825382570769821974, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
+  m_sharedMaterial: {fileID: 2834160958607222945, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3389,8 +3446,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 735977573}
-        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+      - m_Target: {fileID: 735977574}
+        m_TargetAssemblyTypeName: MenuScript, Assembly-CSharp
         m_MethodName: OptionsButton
         m_Mode: 1
         m_Arguments:
@@ -3703,7 +3760,7 @@ MonoBehaviour:
   m_text: Fullscreen
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
-  m_sharedMaterial: {fileID: 8825382570769821974, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
+  m_sharedMaterial: {fileID: 2834160958607222945, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4097,6 +4154,7 @@ RectTransform:
   - {fileID: 282472352}
   - {fileID: 1702610974}
   - {fileID: 2133962503}
+  - {fileID: 407781218}
   m_Father: {fileID: 735977572}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4237,10 +4295,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1490715555}
   m_HandleRect: {fileID: 1080429858}
   m_Direction: 0
-  m_MinValue: -60
-  m_MaxValue: 10
+  m_MinValue: 0.0001
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.0001
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -4316,7 +4374,7 @@ MonoBehaviour:
   m_text: Q u i t
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
-  m_sharedMaterial: {fileID: 8825382570769821974, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
+  m_sharedMaterial: {fileID: 2834160958607222945, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4453,7 +4511,7 @@ MonoBehaviour:
   m_text: Resolution
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
-  m_sharedMaterial: {fileID: 8825382570769821974, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
+  m_sharedMaterial: {fileID: 2834160958607222945, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4665,7 +4723,7 @@ MonoBehaviour:
   m_text: S e t t i n g
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
-  m_sharedMaterial: {fileID: 8825382570769821974, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
+  m_sharedMaterial: {fileID: 2834160958607222945, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4911,7 +4969,7 @@ MonoBehaviour:
   m_text: Effect
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
-  m_sharedMaterial: {fileID: 8825382570769821974, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
+  m_sharedMaterial: {fileID: 2834160958607222945, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5307,18 +5365,6 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 1652360696}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 266844210}
-          m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-          m_MethodName: PlaySFX
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 8300000, guid: 513c7cfeba6a0dd4c9ee3f8a197c6063, type: 3}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -5747,7 +5793,7 @@ MonoBehaviour:
   m_text: C r e d i t
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
-  m_sharedMaterial: {fileID: 8825382570769821974, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
+  m_sharedMaterial: {fileID: 2834160958607222945, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5885,7 +5931,7 @@ MonoBehaviour:
   m_text: Music
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
-  m_sharedMaterial: {fileID: 8825382570769821974, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
+  m_sharedMaterial: {fileID: 2834160958607222945, guid: 71299c2bd6a2f424e9ff9e42b0e43394, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6603,6 +6649,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: combo
+      value: 
+      objectReference: {fileID: 8300000, guid: 2d7c88539b2025b4ab56d85a639af8d1, type: 3}
+    - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: splash
+      value: 
+      objectReference: {fileID: 8300000, guid: bbd555950d5d6404f804ce4d6b27ccfe, type: 3}
+    - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: confetti
+      value: 
+      objectReference: {fileID: 8300000, guid: 27957b6cda47f344ea37feddae3fdffb, type: 3}
+    - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: lemparBuah
+      value: 
+      objectReference: {fileID: 8300000, guid: 086e460e96f7638468e4205cebc12a93, type: 3}
+    - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: sumbuTerbakar
+      value: 
+      objectReference: {fileID: 8300000, guid: 5a9cff4875183884783c66288bce96f2, type: 3}
+    - target: {fileID: 5482237939015833045, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: sfxSlider
+      value: 
+      objectReference: {fileID: 1359405241}
+    - target: {fileID: 5482237939015833045, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: musicSlider
+      value: 
+      objectReference: {fileID: 946820190}
     - target: {fileID: 8551471489931524729, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 769.1277

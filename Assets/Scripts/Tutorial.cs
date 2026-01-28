@@ -40,12 +40,14 @@ public class Tutorial : MonoBehaviour
 
     public void tutorialSelesai()
     {
+        simpanTutorial();
+        SceneManager.LoadScene("prototype");
+    }
+    public void simpanTutorial()
+    {
         sudahTutorial = 1;
         PlayerPrefs.SetInt("TutorialSelesai", 1);
         PlayerPrefs.Save();
-
-        SceneManager.LoadScene("prototype");
     }
-
 
 }

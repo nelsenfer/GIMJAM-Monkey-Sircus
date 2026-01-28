@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class AudioManager : MonoBehaviour
 {
     [Header("---------- Audio Source ----------")]
@@ -9,17 +10,39 @@ public class AudioManager : MonoBehaviour
     // untuk menaruh audio(bgm / sfx)
     [Header("---------- Audio Clip ----------")]
     public AudioClip background;
-    public AudioClip hover;
     public AudioClip hit;
+    public AudioClip splash;
+    public AudioClip combo;
+    public AudioClip confetti;
+    public AudioClip lemparBuah;
+    public AudioClip sumbuTerbakar;
+    public static AudioManager Instance { get; private set; }
+
 
     private void Start()
     {
         musicSource.clip = background;
         musicSource.Play();
     }
-    // untuk sfx control yang nanti dipanggil
-    public void PlaySFX(AudioClip clip)
+
+    private void Awake()
     {
-        sfxSource.PlayOneShot(clip);
+        if (Instance == null) 
+        {
+            Instance = this;
+        }
+        else 
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    // untuk sfx control yang nanti dipanggil
+    public void PlaySFX(AudioClip clip, float volume = 1f)
+    {
+        if (clip != null)
+        {
+            sfxSource.PlayOneShot(clip, volume);
+        }
     }
 }

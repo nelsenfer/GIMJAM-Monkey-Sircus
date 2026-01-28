@@ -158,6 +158,7 @@ public class StackManager : MonoBehaviour
 
     void CalculateSwayPhysics()
     {
+        if (Time.deltaTime <= 0) return;
         float currentX = transform.position.x;
         float velocity = (currentX - lastXPosition) / Time.deltaTime;
         lastXPosition = currentX;

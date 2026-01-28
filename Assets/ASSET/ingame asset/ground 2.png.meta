@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d96dbbab58c27b54f93be3f79e2506d8
+guid: f00484ee5f5470e48afb794443dff82a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3935750235133729936
-    second: BG HOMESCREEN (WIN)_0
+      213: 4838855032841160134
+    second: ground 2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,17 +109,43 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BG HOMESCREEN (WIN)_0
+      name: ground 2_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1599
-        height: 899
+        x: 124
+        y: 298
+        width: 1915
+        height: 276
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 073a13e73086169c0800000000000000
-      internalID: -3935750235133729936
+      spriteID: 6c5cb18d301172340800000000000000
+      internalID: 4838855032841160134
       vertices: []
       indices: 
       edges: []
@@ -148,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BG HOMESCREEN (WIN)_0: -3935750235133729936
+      ground 2_0: 4838855032841160134
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
