@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement; // Added for restarting the game
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public Slider funBarSlider;
     public float maxFun = 5000f;
     public float currentFun = 0f;
-    public int score = 0; // Added Score variable
+    public int score = 0;
 
     [Header("Settings - Score Popup ✨")]
     public TextMeshProUGUI scorePopupText;
@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour
     public int[] comboMultipliers;
     private int comboIndex = 0;
     public TextMeshProUGUI comboText;
+
+    // --- VARIABEL BARU UNTUK LOGIKA HEBOH 10x ---
+    private bool hasCelebratedMaxCombo = false;
 
     [Header("Settings - Heart System ❤️")]
     public int maxLives = 3;
@@ -46,18 +49,15 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Setup Fun Bar
         if (funBarSlider != null)
         {
             funBarSlider.maxValue = maxFun;
             funBarSlider.value = currentFun;
         }
 
-        // Setup Lives
         currentLives = maxLives;
         UpdateHeartUI();
 
-        // Hide UI elements initially
         if (comboText != null) comboText.gameObject.SetActive(false);
         if (splashText != null) splashText.SetActive(false);
         if (scorePopupText != null) scorePopupText.gameObject.SetActive(false);
@@ -69,6 +69,11 @@ public class GameManager : MonoBehaviour
     public void ResetCombo()
     {
         comboIndex = 0;
+
+        // RESET STATUS PERAYAAN
+        // Biar nanti kalau player berhasil naik ke x10 lagi, mereka heboh lagi!
+        hasCelebratedMaxCombo = false;
+
         if (comboText != null) comboText.gameObject.SetActive(false);
     }
 
@@ -82,6 +87,23 @@ public class GameManager : MonoBehaviour
             if (comboMultipliers != null && comboMultipliers.Length > 0)
                 currentMult = comboMultipliers[comboIndex];
 
+            // --- LOGIKA HEBOH PERTAMA KALI STRIKE 10x (ATAU LEBIH) ---
+            if (currentMult >= 10 && !hasCelebratedMaxCombo)
+            {
+                // Panggil Pasukan Monyet!
+                if (CrowdManager.instance != null)
+                {
+                    CrowdManager.instance.TriggerCelebrate();
+                }
+
+                // Tandai sudah dirayakan, biar buah berikutnya (yang x10 juga) gak bikin heboh terus.
+                hasCelebratedMaxCombo = true;
+
+                // Opsional: Kasih efek suara 'YEEAAAH' di sini kalau ada
+                Debug.Log("🎉 FIRST TIME 10x STRIKE! HEBOH!");
+            }
+            // ----------------------------------------------------------
+
             // 2. Calculate Final Score
             int finalScore = baseAmount * currentMult;
             score += finalScore;
@@ -93,7 +115,7 @@ public class GameManager : MonoBehaviour
                 comboText.gameObject.SetActive(true);
 
                 if (comboIndex >= comboMultipliers.Length - 1)
-                    comboText.color = Color.red; // Max combo color
+                    comboText.color = Color.red;
                 else
                     comboText.color = Color.white;
             }
@@ -113,11 +135,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // --- LIFE SYSTEM (Called by StackManager when catching Bomb) ---
+    // --- LIFE SYSTEM ---
 
     public void ReduceLives()
     {
-        ResetCombo(); // Reset combo if hit by bomb
+        ResetCombo(); // Ini otomatis reset hasCelebratedMaxCombo juga
         currentLives--;
         UpdateHeartUI();
 
@@ -134,7 +156,6 @@ public class GameManager : MonoBehaviour
         if (heartIcons == null) return;
         for (int i = 0; i < heartIcons.Length; i++)
         {
-            // Enable heart if index is less than current lives
             heartIcons[i].enabled = (i < currentLives);
         }
     }
@@ -154,14 +175,12 @@ public class GameManager : MonoBehaviour
 
             if (confettiPrefab != null)
             {
-                // Left Cannon
                 Vector3 leftPos = new Vector3(-confettiXOffset, confettiYOffset, 0);
                 Quaternion leftRot = Quaternion.Euler(0, 0, -60);
                 ParticleSystem leftConfetti = Instantiate(confettiPrefab, leftPos, leftRot);
                 leftConfetti.Play();
                 Destroy(leftConfetti.gameObject, 3.0f);
 
-                // Right Cannon
                 Vector3 rightPos = new Vector3(confettiXOffset, confettiYOffset, 0);
                 Quaternion rightRot = Quaternion.Euler(0, 0, 60);
                 ParticleSystem rightConfetti = Instantiate(confettiPrefab, rightPos, rightRot);
@@ -184,9 +203,8 @@ public class GameManager : MonoBehaviour
     {
         if (scorePopupText != null)
         {
-            // Convert World Position to Screen Position for UI
             Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
-            screenPos.y += 50f; // Offset slightly above character
+            screenPos.y += 50f;
 
             scorePopupText.transform.position = screenPos;
             scorePopupText.text = "+ " + amount.ToString("F0");
@@ -200,12 +218,8 @@ public class GameManager : MonoBehaviour
             {
                 timer += Time.deltaTime;
                 float progress = timer / popupDuration;
-
-                // Floating Up Effect
                 scorePopupText.transform.position = startPos + new Vector3(0, floatSpeed * timer, 0);
-                // Fading Out Effect
                 scorePopupText.alpha = Mathf.Lerp(1f, 0f, progress);
-
                 yield return null;
             }
             scorePopupText.gameObject.SetActive(false);
@@ -217,11 +231,10 @@ public class GameManager : MonoBehaviour
     void TriggerGameOver()
     {
         Debug.Log("💀 GAME OVER");
-        Time.timeScale = 0; // Pause Game
+        Time.timeScale = 0;
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
     }
 
-    // Can be called by a Button in Unity UI
     public void RestartGame()
     {
         Time.timeScale = 1;

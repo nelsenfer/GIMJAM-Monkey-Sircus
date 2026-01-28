@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3935026918914906063}
   - component: {fileID: 4822961870836433976}
   m_Layer: 0
-  m_Name: Item_Boom_Apple 3
+  m_Name: Item_Boom_Pisang
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 92fdbad189e865f43b73ad6cf2ebf028, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a970ee3e66d321e4ea35c6995891ac71, type: 3}
   m_Color: {r: 1, g: 0.91886795, b: 0.91886795, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -147,6 +147,8 @@ MonoBehaviour:
   startScale: 2
   endScale: 0.5
   funValueAmount: -3
+  visualOffsetY: 0
+  heightReduction: 0
 --- !u!95 &4822961870836433976
 Animator:
   serializedVersion: 7
@@ -157,7 +159,7 @@ Animator:
   m_GameObject: {fileID: 3449275796817891958}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 86579e83119eba04088ee58a707a19a8, type: 2}
+  m_Controller: {fileID: 9100000, guid: df7a6202a1b0fda4c87a89c2a7e21159, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

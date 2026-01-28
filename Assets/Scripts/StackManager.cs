@@ -123,6 +123,11 @@ public class StackManager : MonoBehaviour
             }
         }
 
+        if (CrowdManager.instance != null)
+        {
+            CrowdManager.instance.TriggerCelebrate();
+        }
+
         // C. Reset List
         stackedItems.Clear();
         UpdateStackY();
