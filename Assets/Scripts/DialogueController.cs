@@ -40,6 +40,7 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private Sprite ekspresiSakit;
     [Header("GameObject")]
     [SerializeField] private GameObject move;
+    [SerializeField] private GameObject funValue;
     [SerializeField] private GameObject buah;
     [SerializeField] private GameObject bomb;
 
@@ -73,7 +74,8 @@ public class DialogueController : MonoBehaviour
             // Update konten teks dan sprite
             UpdateVisualDialog(indexSekarang);
             if (indexSekarang == 5) move.SetActive(true);
-            if (indexSekarang == 6) { buah.SetActive(true); }
+            if (indexSekarang == 6) { funValue.SetActive(true); }
+            if (indexSekarang == 7) { buah.SetActive(true); }
             if (indexSekarang == 7) { bomb.SetActive(true); }
         }
         else
