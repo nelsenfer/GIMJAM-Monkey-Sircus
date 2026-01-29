@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Settings - Fun Meter")]
     public Slider funBarSlider;
-    public float maxFun = 5000f;
+    public float maxFun = 5000f; // Batas Maksimal (Sudah diatur di sini)
     public float currentFun = 0f;
     public int score = 0;
 
@@ -39,7 +39,11 @@ public class GameManager : MonoBehaviour
 
     [Header("Settings - UI")]
     public GameObject winPanel;
+    public TextMeshProUGUI winScoreText;
+
     public GameObject gameOverPanel;
+    public TextMeshProUGUI gameOverScoreText;
+
     public GameObject splashText;
 
     void Awake()
@@ -50,7 +54,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-
         if (funBarSlider != null)
         {
             funBarSlider.maxValue = maxFun;
@@ -64,6 +67,7 @@ public class GameManager : MonoBehaviour
         if (splashText != null) splashText.SetActive(false);
         if (scorePopupText != null) scorePopupText.gameObject.SetActive(false);
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
+        if (winPanel != null) winPanel.SetActive(false);
     }
 
     // --- COMBO & SCORE SYSTEM ---
@@ -71,69 +75,48 @@ public class GameManager : MonoBehaviour
     public void ResetCombo()
     {
         comboIndex = 0;
-
-        // RESET STATUS PERAYAAN
-        // Biar nanti kalau player berhasil naik ke x10 lagi, mereka heboh lagi!
         hasCelebratedMaxCombo = false;
-
         if (comboText != null) comboText.gameObject.SetActive(false);
     }
 
-    // Called by StackManager when catching Fruit
     public void AddScore(int baseAmount, Vector3 capturePos)
     {
         if (baseAmount > 0)
         {
-            // 1. Calculate Multiplier
             int currentMult = 1;
             if (comboMultipliers != null && comboMultipliers.Length > 0)
                 currentMult = comboMultipliers[comboIndex];
 
-            // --- LOGIKA HEBOH PERTAMA KALI STRIKE 10x (ATAU LEBIH) ---
             if (currentMult >= 10 && !hasCelebratedMaxCombo)
             {
-                // Panggil Pasukan Monyet!
-                if (CrowdManager.instance != null)
-                {
-                    CrowdManager.instance.TriggerCelebrate();
-                }
-
-                // Tandai sudah dirayakan, biar buah berikutnya (yang x10 juga) gak bikin heboh terus.
+                if (CrowdManager.instance != null) CrowdManager.instance.TriggerCelebrate();
                 hasCelebratedMaxCombo = true;
-
-                // Opsional: Kasih efek suara 'YEEAAAH' di sini kalau ada
                 Debug.Log("🎉 FIRST TIME 10x STRIKE! HEBOH!");
                 AudioManager.Instance.PlaySFX(AudioManager.Instance.crowd);
             }
-            // ----------------------------------------------------------
 
-            // 2. Calculate Final Score
             int finalScore = baseAmount * currentMult;
             score += finalScore;
 
-            // 3. Update Combo UI
             if (comboText != null)
             {
                 comboText.text = "x" + currentMult;
                 comboText.gameObject.SetActive(true);
+                if (comboIndex >= comboMultipliers.Length - 1) comboText.color = Color.red;
+                else comboText.color = Color.white;
 
-                if (comboIndex >= comboMultipliers.Length - 1)
-                    comboText.color = Color.red;
-                
-                else
-                    comboText.color = Color.white;
                 float targetVolume = Mathf.Clamp((float)currentMult / 10f, 0.1f, 1f);
                 AudioManager.Instance.PlaySFX(AudioManager.Instance.combo, targetVolume);
             }
 
-            // 4. Update Fun Bar & Popup
             currentFun += finalScore;
+            // 🔒 INI PENJAGANYA: currentFun tidak akan pernah lebih dari maxFun (5000)
             currentFun = Mathf.Clamp(currentFun, 0, maxFun);
+
             if (funBarSlider != null) funBarSlider.value = currentFun;
 
             TriggerScorePopup(finalScore, capturePos);
 
-            // 5. Increase Combo Level for Next Item
             if (comboMultipliers != null && comboIndex < comboMultipliers.Length - 1)
             {
                 comboIndex++;
@@ -145,15 +128,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // --- LIFE SYSTEM ---
-
     public void ReduceLives()
     {
-        ResetCombo(); // Ini otomatis reset hasCelebratedMaxCombo juga
+        ResetCombo();
         currentLives--;
         UpdateHeartUI();
-
-        Debug.Log("ouch! Lives left: " + currentLives);
 
         if (currentLives <= 0)
         {
@@ -170,10 +149,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // --- VISUAL EFFECTS ---
-
-
-    // add crowd sounds 
     public void TriggerSplashEffect()
     {
         StartCoroutine(ShowSplashTextRoutine());
@@ -187,7 +162,6 @@ public class GameManager : MonoBehaviour
         if (splashText != null)
         {
             splashText.SetActive(true);
-
             if (confettiPrefab != null)
             {
                 Vector3 leftPos = new Vector3(-confettiXOffset, confettiYOffset, 0);
@@ -202,7 +176,6 @@ public class GameManager : MonoBehaviour
                 rightConfetti.Play();
                 Destroy(rightConfetti.gameObject, 3.0f);
             }
-
             yield return new WaitForSeconds(0.8f);
             splashText.SetActive(false);
         }
@@ -220,7 +193,6 @@ public class GameManager : MonoBehaviour
         {
             Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
             screenPos.y += 50f;
-
             scorePopupText.transform.position = screenPos;
             scorePopupText.text = "+ " + amount.ToString("F0");
             scorePopupText.gameObject.SetActive(true);
@@ -228,7 +200,6 @@ public class GameManager : MonoBehaviour
 
             float timer = 0;
             Vector3 startPos = scorePopupText.transform.position;
-
             while (timer < popupDuration)
             {
                 timer += Time.deltaTime;
@@ -244,20 +215,34 @@ public class GameManager : MonoBehaviour
     // --- GAME OVER LOGIC ---
     void TriggerWin()
     {
-        // PERBAIKAN: Gunakan Time.timeScale untuk menghentikan waktu game
+        // 🔥 UPDATE FORMAT TEXT DI SINI
+        if (winScoreText != null)
+        {
+            // Hasil: "Fun Value : 5000 / 5000"
+            winScoreText.text = currentFun.ToString("F0") + " / " + maxFun.ToString("F0");
+        }
+
         MenuScript.Instance.Pause();
 
-        if (winPanel != null) winPanel.SetActive(true); // Munculkan pilihan (Main Lagi / Menu)
+        if (winPanel != null) winPanel.SetActive(true);
 
         if (ChangeUi.Instance != null)
         {
-            ChangeUi.Instance.gameSelesai(); // Data tersimpan, tapi tetap di scene ini
+            ChangeUi.Instance.gameSelesai();
         }
     }
 
     void TriggerGameOver()
     {
         Debug.Log("💀 GAME OVER");
+
+        // 🔥 UPDATE FORMAT TEXT DI SINI
+        if (gameOverScoreText != null)
+        {
+            // Hasil contoh: "Fun Value : 1250 / 5000"
+            gameOverScoreText.text = currentFun.ToString("F0") + " / " + maxFun.ToString("F0");
+        }
+
         MenuScript.Instance.Pause();
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
     }

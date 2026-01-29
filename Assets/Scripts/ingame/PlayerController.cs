@@ -4,17 +4,12 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Settings")]
     public float moveSpeed = 5f;
-    public float jumpForce = 10f;
 
     [Header("Components")]
     public Animator anim;
     public Rigidbody2D rb;
-    public Transform groundCheck;
-    public LayerMask groundLayer;
 
     private float moveInput;
-    private bool isGrounded;
-    private bool jumpRequest;
 
     void Start()
     {
@@ -27,51 +22,38 @@ public class PlayerController : MonoBehaviour
         // 1. Input Gerak (-1 untuk Kiri, 1 untuk Kanan, 0 Diam)
         moveInput = Input.GetAxisRaw("Horizontal");
 
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        // 2. Update Animasi
+        // Pastikan di Animator kamu punya parameter Float bernama "InputX"
+        if (anim != null)
         {
-            jumpRequest = true;
+            anim.SetFloat("InputX", moveInput);
         }
-
-        anim.SetFloat("InputX", moveInput);
     }
 
     void FixedUpdate()
     {
-        if (isGrounded)
+        // 3. Eksekusi Gerak Fisika
+        // Kita ubah kecepatan X sesuai input, tapi biarkan Y apa adanya (biar gravitasi tetap jalan)
+        if (rb != null)
         {
             rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
         }
-        else
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y);
-        }
-
-        if (jumpRequest)
-        {
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            isGrounded = false;
-            jumpRequest = false;
-        }
     }
 
+    // --- ANIMASI REAKSI (Dipanggil script lain) ---
 
     public void PlayHappyAnim()
     {
         if (anim != null)
         {
-            // Pastikan kamu sudah bikin parameter "TriggerHappy" di Animator window
             anim.SetTrigger("TriggerHappy");
         }
     }
 
-    // Dipanggil saat kena Bom (via StackManager/GameManager)
     public void PlayHurtAnim()
     {
         if (anim != null)
         {
-            // Pastikan kamu sudah bikin parameter "TriggerHurt" di Animator window
             anim.SetTrigger("TriggerHurt");
         }
     }
