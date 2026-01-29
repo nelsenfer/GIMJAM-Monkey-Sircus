@@ -8,14 +8,14 @@ public class Tutorial : MonoBehaviour
     [SerializeField] private GameObject menu;
     [SerializeField] private GameObject warning;
     private int peringatan = 0;
-    public static int sudahTutorial = 0; 
+    public static int sudahTutorial = 0;
     public static Tutorial Instance;
 
     private void Awake()
     {
         // Setup Singleton
         if (Instance == null) Instance = this;
-        
+
         sudahTutorial = PlayerPrefs.GetInt("TutorialSelesai", 0);
     }
 
@@ -32,7 +32,8 @@ public class Tutorial : MonoBehaviour
         {
             peringatan += 1;
             warning.SetActive(true);
-        } else
+        }
+        else
         {
             tutorialSelesai();
         }
@@ -41,7 +42,7 @@ public class Tutorial : MonoBehaviour
     public void tutorialSelesai()
     {
         simpanTutorial();
-        SceneManager.LoadScene("prototype");
+        SceneManager.LoadScene("GamePlay");
     }
     public void simpanTutorial()
     {
