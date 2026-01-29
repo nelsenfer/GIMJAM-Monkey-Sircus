@@ -38,6 +38,10 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private Sprite ekspresiHore;
     [SerializeField] private Sprite ekspresiAntusias;
     [SerializeField] private Sprite ekspresiSakit;
+    [Header("GameObject")]
+    [SerializeField] private GameObject move;
+    [SerializeField] private GameObject buah;
+    [SerializeField] private GameObject bomb;
 
     private int indexSekarang = -1;
     private static int tutorialSudahSelesai = 0;
@@ -51,6 +55,9 @@ public class DialogueController : MonoBehaviour
     {
         int indexSebelumnya = indexSekarang;
         indexSekarang++;
+        move.SetActive(false);
+        buah.SetActive(false);
+        bomb.SetActive(false);
 
         // CEK: Jika masih ada baris dialog di dalam array
         if (indexSekarang < daftarDialog.Length)
@@ -65,6 +72,9 @@ public class DialogueController : MonoBehaviour
 
             // Update konten teks dan sprite
             UpdateVisualDialog(indexSekarang);
+            if (indexSekarang == 5) move.SetActive(true);
+            if (indexSekarang == 6) { buah.SetActive(true); }
+            if (indexSekarang == 7) { bomb.SetActive(true); }
         }
         else
         {
@@ -86,19 +96,19 @@ public class DialogueController : MonoBehaviour
         yield return new WaitForSeconds(3f);
 
         // 5. Lanjut Dialog
-        if(Tutorial.sudahTutorial == 1)
+        if (Tutorial.sudahTutorial == 1 && Tutorial.sudahTutorial == 1)
         {
             Tutorial.Instance.tutorialSelesai();
         }
-        if(tutorialSudahSelesai == 0)
+        if (tutorialSudahSelesai == 0)
         {
-            
+
             tiraiManager.SembunyikanTirai();
             Debug.Log("Animasi selesai, sekarang bersembunyi");
             yield return new WaitForSeconds(3f);
-            LanjutDialog();
             tutorialSudahSelesai = 1;
             Tutorial.Instance.simpanTutorial();
+            LanjutDialog();
         }
     }
 

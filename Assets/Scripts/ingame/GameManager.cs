@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
 
                 // Opsional: Kasih efek suara 'YEEAAAH' di sini kalau ada
                 Debug.Log("🎉 FIRST TIME 10x STRIKE! HEBOH!");
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.crowd);
             }
             // ----------------------------------------------------------
 
@@ -118,6 +119,7 @@ public class GameManager : MonoBehaviour
 
                 if (comboIndex >= comboMultipliers.Length - 1)
                     comboText.color = Color.red;
+                
                 else
                     comboText.color = Color.white;
                 float targetVolume = Mathf.Clamp((float)currentMult / 10f, 0.1f, 1f);
@@ -176,6 +178,7 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(ShowSplashTextRoutine());
         AudioManager.Instance.PlaySFX(AudioManager.Instance.splash);
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.crowd);
         AudioManager.Instance.PlaySFX(AudioManager.Instance.confetti, 1.5f);
     }
 

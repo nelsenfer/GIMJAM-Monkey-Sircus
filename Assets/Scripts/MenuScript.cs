@@ -21,7 +21,7 @@ public class MenuScript : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null) 
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -77,7 +77,7 @@ public class MenuScript : MonoBehaviour
         if (normalSnapshot != null)
         {
             // Tetap 1f atau samakan dengan Pause (0.5f) agar konsisten
-            normalSnapshot.TransitionTo(0.5f); 
+            normalSnapshot.TransitionTo(0.5f);
             Debug.Log("Berpindah ke Snapshot Normal (Smooth)");
         }
         AudioListener.pause = false;
@@ -85,16 +85,14 @@ public class MenuScript : MonoBehaviour
 
     public void Pause()
     {
-        Time.timeScale = 0f;
-        GameIsPaused = true;
         if (pausedSnapshot != null)
         {
-            // Ubah dari 0.0001f ke 1f agar sehalus Resume
-            // Atau gunakan 0.5f jika ingin sedikit lebih cepat tapi tetap smooth
-            pausedSnapshot.TransitionTo(0.5f); 
+            // Pindahkan transisi ke baris paling atas
+            pausedSnapshot.TransitionTo(0.005f); 
             Debug.Log("Berpindah ke Snapshot Paused (Smooth)");
         }
-        AudioListener.pause = true;
+        Time.timeScale = 0f;
+        GameIsPaused = true;
     }
 
     public void MainMenuButton()

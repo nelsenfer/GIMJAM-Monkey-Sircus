@@ -10,12 +10,13 @@ public class AudioManager : MonoBehaviour
     // untuk menaruh audio(bgm / sfx)
     [Header("---------- Audio Clip ----------")]
     public AudioClip background;
-    public AudioClip hit;
     public AudioClip splash;
     public AudioClip combo;
     public AudioClip confetti;
     public AudioClip lemparBuah;
     public AudioClip sumbuTerbakar;
+    public AudioClip bomb;
+    public AudioClip crowd;
     public static AudioManager Instance { get; private set; }
 
 
@@ -27,11 +28,11 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null) 
+        if (Instance == null)
         {
             Instance = this;
         }
-        else 
+        else
         {
             Destroy(gameObject);
         }

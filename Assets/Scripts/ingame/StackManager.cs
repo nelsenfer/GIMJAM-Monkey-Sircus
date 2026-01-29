@@ -101,6 +101,7 @@ public class StackManager : MonoBehaviour
 
             // C. HANCURKAN BOM-NYA (PENTING!)
             // Jangan dimasukkan ke stackedItems, langsung destroy aja biar hilang dari layar.
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.bomb);
             Destroy(fruit);
         }
     }

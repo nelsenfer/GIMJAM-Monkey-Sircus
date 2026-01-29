@@ -1593,14 +1593,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2641062733358413120, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -6702828367004299369, guid: adaec1586cdd883499ff0ebdf1dd8656, type: 2}
     - target: {fileID: 3682006214393751651, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
     - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: bomb
+      value: 
+      objectReference: {fileID: 8300000, guid: 88730f61d3d319645859a78a26950860, type: 3}
+    - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
       propertyPath: combo
       value: 
       objectReference: {fileID: 8300000, guid: 2d7c88539b2025b4ab56d85a639af8d1, type: 3}
+    - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: crowd
+      value: 
+      objectReference: {fileID: 8300000, guid: a607262326f99064586fae5884184c7e, type: 3}
     - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
       propertyPath: comboa
       value: 
