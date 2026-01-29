@@ -170,6 +170,8 @@ public class GameManager : MonoBehaviour
 
     // --- VISUAL EFFECTS ---
 
+
+    // add crowd sounds 
     public void TriggerSplashEffect()
     {
         StartCoroutine(ShowSplashTextRoutine());
