@@ -63,14 +63,14 @@ public class MainMenuManager : MonoBehaviour
     {
         if (global::Tutorial.sudahTutorial == 1)
         {
-            SceneManager.LoadScene("prototype");
+            SceneManager.LoadScene("GamePlay");
         }
         else
         {
             SceneManager.LoadScene("Tutorial");
         }
     }
-    
+
     public void CreditButton()
     {
         if (CreditUi != null) CreditUi.SetActive(!CreditUi.activeSelf);

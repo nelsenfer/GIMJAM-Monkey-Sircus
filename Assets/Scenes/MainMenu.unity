@@ -6650,9 +6650,21 @@ PrefabInstance:
       value: AudioManager
       objectReference: {fileID: 0}
     - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: win
+      value: 
+      objectReference: {fileID: 8300000, guid: 6e27020d1e4534f428cfdc9200f06336, type: 3}
+    - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: bomb
+      value: 
+      objectReference: {fileID: 8300000, guid: 88730f61d3d319645859a78a26950860, type: 3}
+    - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
       propertyPath: combo
       value: 
       objectReference: {fileID: 8300000, guid: 2d7c88539b2025b4ab56d85a639af8d1, type: 3}
+    - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: crowd
+      value: 
+      objectReference: {fileID: 8300000, guid: a607262326f99064586fae5884184c7e, type: 3}
     - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
       propertyPath: splash
       value: 
@@ -6661,6 +6673,10 @@ PrefabInstance:
       propertyPath: confetti
       value: 
       objectReference: {fileID: 8300000, guid: 27957b6cda47f344ea37feddae3fdffb, type: 3}
+    - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
+      propertyPath: gameOver
+      value: 
+      objectReference: {fileID: 8300000, guid: e834593bc4ff96543b3e886bb5788803, type: 3}
     - target: {fileID: 5419080942551163666, guid: fa438330675f1bf4c80d134e868539dc, type: 3}
       propertyPath: lemparBuah
       value: 

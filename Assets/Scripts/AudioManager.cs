@@ -17,6 +17,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip sumbuTerbakar;
     public AudioClip bomb;
     public AudioClip crowd;
+    public AudioClip gameOver;
+    public AudioClip win;
     public static AudioManager Instance { get; private set; }
 
 
@@ -44,6 +46,14 @@ public class AudioManager : MonoBehaviour
         if (clip != null)
         {
             sfxSource.PlayOneShot(clip, volume);
+        }
+    }
+
+    public void PlayMusicOnce(AudioClip clip, float volume = 1f)
+    {
+        if (clip != null)
+        {
+            musicSource.PlayOneShot(clip, volume);
         }
     }
 }

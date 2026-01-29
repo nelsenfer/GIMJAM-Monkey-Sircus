@@ -88,7 +88,7 @@ public class MenuScript : MonoBehaviour
         if (pausedSnapshot != null)
         {
             // Pindahkan transisi ke baris paling atas
-            pausedSnapshot.TransitionTo(0.005f); 
+            pausedSnapshot.TransitionTo(0.005f);
             Debug.Log("Berpindah ke Snapshot Paused (Smooth)");
         }
         Time.timeScale = 0f;
@@ -99,7 +99,7 @@ public class MenuScript : MonoBehaviour
     {
         if (GoMainMenu)
         {
-            // Pastikan waktu kembali normal sebelum pindah scene
+            GameIsPaused = false;
             Time.timeScale = 1f;
             SceneManager.LoadScene("MainMenu");
         }

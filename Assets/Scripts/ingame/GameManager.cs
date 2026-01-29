@@ -258,6 +258,9 @@ public class GameManager : MonoBehaviour
         {
             ChangeUi.Instance.gameSelesai();
         }
+
+        AudioManager.Instance.PlayMusicOnce(AudioManager.Instance.win);
+
     }
 
     void TriggerGameOver()
@@ -273,6 +276,7 @@ public class GameManager : MonoBehaviour
 
         MenuScript.Instance.Pause();
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
+        AudioManager.Instance.PlayMusicOnce(AudioManager.Instance.gameOver);
     }
 
     public void RestartGame()
