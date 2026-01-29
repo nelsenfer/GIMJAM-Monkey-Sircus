@@ -57,6 +57,7 @@ public class DialogueController : MonoBehaviour
         int indexSebelumnya = indexSekarang;
         indexSekarang++;
         move.SetActive(false);
+        funValue.SetActive(false);
         buah.SetActive(false);
         bomb.SetActive(false);
 
@@ -76,7 +77,7 @@ public class DialogueController : MonoBehaviour
             if (indexSekarang == 5) move.SetActive(true);
             if (indexSekarang == 6) { funValue.SetActive(true); }
             if (indexSekarang == 7) { buah.SetActive(true); }
-            if (indexSekarang == 7) { bomb.SetActive(true); }
+            if (indexSekarang == 8) { bomb.SetActive(true); }
         }
         else
         {

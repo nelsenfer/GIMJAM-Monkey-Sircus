@@ -41,10 +41,28 @@ public class ItemSpawner : MonoBehaviour
     void Start()
     {
         playerStack = FindAnyObjectByType<StackManager>();
-        fruitTimer = fruitSpawnInterval;
-        bombTimer = Random.Range(minBombInterval, maxBombInterval);
+
+        // Kunci sistem spawn di awal
+        isAttacking = true;
+        canTriggerChaos = false;
+
+        // Mulai Coroutine untuk membuka kunci setelah 5 detik
+        StartCoroutine(JedaAwalTirai(5.0f));
 
         if (groundCollider == null) Debug.LogError("⚠️ HEH! Masukin Collider Tali dulu!");
+    }
+
+    IEnumerator JedaAwalTirai(float durasi)
+    {
+        // Tunggu selama animasi tirai (5 detik)
+        yield return new WaitForSeconds(durasi);
+
+        // Buka kunci: Sekarang buah akan spawn sesuai 'fruitSpawnInterval'
+        isAttacking = false;
+        canTriggerChaos = true;
+
+        // Reset timer agar buah pertama muncul segera setelah tirai buka
+        fruitTimer = 0f;
     }
 
     void Update()
@@ -260,7 +278,7 @@ public class ItemSpawner : MonoBehaviour
         Vector3 pos = new Vector3(xPos, startHeight, 0);
         GameObject newItem = Instantiate(prefab, pos, Quaternion.identity);
 
-        if(AudioManager.Instance != null)
+        if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.lemparBuah);
         }

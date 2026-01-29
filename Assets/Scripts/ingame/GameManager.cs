@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Threading;
 
 public class GameManager : MonoBehaviour
 {
@@ -54,6 +55,10 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1f;
+
+        StartCoroutine(StartGameRoutine());
+
         if (funBarSlider != null)
         {
             funBarSlider.maxValue = maxFun;
@@ -68,6 +73,29 @@ public class GameManager : MonoBehaviour
         if (scorePopupText != null) scorePopupText.gameObject.SetActive(false);
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
         if (winPanel != null) winPanel.SetActive(false);
+    }
+
+    IEnumerator StartGameRoutine()
+    {
+
+        // 2. TUNGGU 1 FRAME (PENTING! ⏳)
+        // Memberi waktu agar Script TiraiController & Animator-nya 'Bangun' (Awake/Start) dulu
+        yield return null;
+
+        // 3. Baru panggil Tirai lewat Instance
+        if (TiraiController.instance != null)
+        {
+            Debug.Log("🏁 GameManager: Memanggil Tirai Sekarang!");
+            TiraiController.instance.TampilkanTirai();
+            TiraiController.instance.bg.SetActive(false);
+            yield return new WaitForSeconds(1f);
+            TiraiController.instance.bg.SetActive(true);
+            TiraiController.instance.SembunyikanTirai();
+        }
+        else
+        {
+            Debug.LogError("❌ TiraiController INSTANCE masih Null! Pastikan ada di Scene.");
+        }
     }
 
     // --- COMBO & SCORE SYSTEM ---
